@@ -1,2 +1,2 @@
 echo "Building Tofu"
-scalac src/* -d build/tofu.jar
+scalac src/* src/*/* -d build/tofu.jar

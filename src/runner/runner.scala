@@ -63,8 +63,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           val afterfunc = skipFunction(s, i+1)
           debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, ifunc, nfunc, afterfunc, runningfuncs, pointer_stack)
-        case "set" =>
-          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+//         case "set" =>
+//           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
@@ -72,6 +72,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), runningfuncs+1, pointer_stack :+ (i+1))
         case "print" =>
           printArg(s(i))
+          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+        case "loop" =>
           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
         case _ =>
           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
@@ -107,13 +109,6 @@ private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String 
       mkcommand(line, addArg(cmd, arg), "", i+1, ignore_spaces)
   else
     mkcommand(line, cmd, arg + line(i), i+1, ignore_spaces)
-
-private def readVariable(variable: String, i: Int = 0, v: String = ""): String =
-  if i >= variable.length || variable(i) == ' ' then
-    val var_index = findInList(v, var_name)
-    if var_index == -1 then v else var_val(var_index)
-  else if i == 0 then readVariable(variable, i+1, v)
-  else readVariable(variable, i+1, v + variable(i))
 
 def exec(line: String) =
   val cmd_start = findLineStart(line, 4)
