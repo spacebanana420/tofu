@@ -60,7 +60,7 @@ def num_multiply(line: String): Int =
   val numbers = get_nums(line, num_start)
   mp_nums(numbers)
 
-def num_divide(line: String): Int =
+def num_div(line: String): Int =
   val num_start = findLineStart(line, 3)
   val numbers = get_nums(line, num_start)
   div_nums(numbers)
