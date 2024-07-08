@@ -7,6 +7,8 @@ import tofu.reader.findLineStart
 import scala.sys.process.*
 import scala.compiletime.ops.long
 import tofu.reader.readScript
+import tofu.closeTofu
+import scala.runtime.stdLibPatches.language.`3.1`
 
 private def lineType(line: String, types: Vector[String] = Vector("set", "print", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
@@ -48,20 +50,30 @@ private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector
 private def loopScript(s: Seq[String], iv: Seq[Int], nv: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, runningfuncs: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
   if i < s.length then
     if runningfuncs > 0 && startsWith(s(i), "end") then
-      debugMessage("Found the end of a function")
-      loopScript(s, iv, nv, ifunc, nfunc, pointer_stack(pointer_stack.length-1), runningfuncs-1, removeLastPointer(pointer_stack))
+      val new_i = pointer_stack(pointer_stack.length-1)
+      debugMessage(s"Found the end of a function, returning to $new_i")
+      loopScript(s, iv, nv, ifunc, nfunc, new_i, runningfuncs-1, removeLastPointer(pointer_stack))
     else
       val linetype = lineType(s(i))
-      if linetype != "stop" then linetype match
-        case "function" => //be careful for when actually calling functions (maybe i dont have to worry)
+      if linetype == "stop" then closeTofu()
+      else linetype match
+        case "function" =>
           val afterfunc = skipFunction(s, i+1)
           debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, iv, nv, ifunc, nfunc, afterfunc, runningfuncs, pointer_stack)
         case "set" =>
-        case "exec" => exec(s(i))
-        case "goto" => loopScript(s, iv, nv, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), runningfuncs+1, pointer_stack :+ (i+1))
+          loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+        case "exec" =>
+          exec(s(i))
+          loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+        case "goto" =>
+          loopScript(s, iv, nv, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), runningfuncs+1, pointer_stack :+ (i+1))
         case "print" =>
-        loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+          printArg(s(i))
+          loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+        case _ =>
+          loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+
 
 
 // def goToLine(line: String, ci: Seq[Int], cn: Seq[String]): Int =
@@ -97,3 +109,13 @@ def exec(line: String) =
   val cmd = mkcommand(line, i = cmd_start)
   debug_printSeq("Running command:", cmd)
   cmd.!
+
+private def getPrintMsg(line: String, i: Int, msg: String = ""): String =
+  if i >= line.length then msg
+  else getPrintMsg(line, i+1, msg + line(i))
+
+def printArg(line: String) =
+  val msg_start = findLineStart(line, 5)
+  debugMessage(s"Printing parsing started at $msg_start")
+  val msg = getPrintMsg(line, msg_start)
+  println(msg)

@@ -27,6 +27,6 @@ def debug_printSeq(msg: String, s: Seq[String]) =
     for i <- s do
       println(s"\t$i")
 
-def closeTofu(msg: String) =
-  println(msg)
+def closeTofu(msg: String = "") =
+  if msg.length > 0 then println(msg)
   System.exit
