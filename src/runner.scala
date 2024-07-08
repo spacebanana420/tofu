@@ -1,5 +1,6 @@
 package tofu.runner
 
+import tofu.{debugMessage, debug_printSeq}
 import tofu.parser.*
 import tofu.reader.findLineStart
 
@@ -7,7 +8,7 @@ import scala.sys.process.*
 import scala.compiletime.ops.long
 import tofu.reader.readScript
 
-private def lineType(line: String, types: Vector[String] = Vector("set", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
+private def lineType(line: String, types: Vector[String] = Vector("set", "print", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith(line, types(i)) then types(i)
   else lineType(line, types, i+1)
@@ -26,6 +27,10 @@ def runScript(path: String) =
   val i_func = getFuncIndexes(script)
   val name_func = getFuncNames(script, i_func)
 
+  debug_printSeq("Script in memory:", script)
+  debug_printSeq("Variable names:", name_var)
+  debug_printSeq("Function names:", name_func)
+
   loopScript(script, i_variable, name_var, i_func, name_func)
 
 //   val i_checkpoint = getCheckpoints(script)
@@ -42,46 +47,53 @@ private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector
 
 private def loopScript(s: Seq[String], iv: Seq[Int], nv: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, runningfuncs: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
   if i < s.length then
-    if runningfuncs > 0 && startsWith(s(i), "end") then loopScript(s, iv, nv, ifunc, nfunc, pointer_stack(pointer_stack.length-1), runningfuncs-1, removeLastPointer(pointer_stack))
+    if runningfuncs > 0 && startsWith(s(i), "end") then
+      debugMessage("Found the end of a function")
+      loopScript(s, iv, nv, ifunc, nfunc, pointer_stack(pointer_stack.length-1), runningfuncs-1, removeLastPointer(pointer_stack))
     else
       val linetype = lineType(s(i))
       if linetype != "stop" then linetype match
         case "function" => //be careful for when actually calling functions (maybe i dont have to worry)
           val afterfunc = skipFunction(s, i+1)
+          debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, iv, nv, ifunc, nfunc, afterfunc, runningfuncs, pointer_stack)
         case "set" =>
         case "exec" => exec(s(i))
         case "goto" => loopScript(s, iv, nv, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), runningfuncs+1, pointer_stack :+ (i+1))
+        case "print" =>
         loopScript(s, iv, nv, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
 
 
-def goToLine(line: String, ci: Seq[Int], cn: Seq[String]): Int = //make goto function instead
-  val name_start = findLineStart(line, 4)
-  val name = getName(line, name_start)
-  val i = findInList(line, cn)
-  ci(i)
+// def goToLine(line: String, ci: Seq[Int], cn: Seq[String]): Int =
+//   val name = getName(line, name_start)
+//   val i = findInList(line, cn)
+//   ci(i)
 
 def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   val name_start = findLineStart(line, 4)
   val name = getName(line, name_start)
-  val i = findInList(line, fn)
+  debugMessage(s"Calling function $name")
+  val i = findInList(name, fn)
+  debugMessage(s"Moved to line ${fi(i)+1}")
   fi(i)+1
 
 private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String = "", i: Int = 0, ignore_spaces: Boolean = false): Vector[String] =
-  if i >= line.length then cmd
+  if i >= line.length then
+    if arg.length == 0 then cmd
+    else cmd :+ arg
+  else if line(i) == '"' then
+    mkcommand(line, cmd, arg, i+1, !ignore_spaces)
   else if line(i) == ' ' || line(i) == '\t' then
     if ignore_spaces then
       mkcommand(line, cmd, arg + line(i), i+1, ignore_spaces)
-    else if arg.length > 0 then
-      mkcommand(line, cmd :+ arg, "", i+1, ignore_spaces)
     else
-      mkcommand(line, cmd, arg, i+1, ignore_spaces)
-  else if line(i) == '"' then
-    mkcommand(line, cmd, arg, i+1, !ignore_spaces)
+      mkcommand(line, cmd :+ arg, "", i+1, ignore_spaces)
   else
     mkcommand(line, cmd, arg + line(i), i+1, ignore_spaces)
 
 def exec(line: String) =
   val cmd_start = findLineStart(line, 4)
-  val cmd = mkcommand(line)
+  debugMessage(s"Exec parsing started at $cmd_start")
+  val cmd = mkcommand(line, i = cmd_start)
+  debug_printSeq("Running command:", cmd)
   cmd.!

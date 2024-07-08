@@ -11,9 +11,22 @@ var debug_mode: Boolean = false
   val scripts = argv.filter(x => isScript(x))
   for s <- scripts do runScript(s)
 
-def readArgs(args: Seq[String]) =
+private def readArgs(args: Seq[String]) =
   if args.contains("--debug") then debug_mode = true
 
-def isScript(arg: String): Boolean =
+private def isScript(arg: String): Boolean =
   val f_arg = File(arg)
   f_arg.isFile() && f_arg.canRead() && arg.contains(".tofu")
+
+def debugMessage(msg: String) = //will be fancier later
+  if debug_mode then println(s"[DEBUG] $msg")
+
+def debug_printSeq(msg: String, s: Seq[String]) =
+  if debug_mode then
+    println(s"[DEBUG] $msg")
+    for i <- s do
+      println(s"\t$i")
+
+def closeTofu(msg: String) =
+  println(msg)
+  System.exit
