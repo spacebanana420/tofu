@@ -8,7 +8,7 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def getPrintMsg(line: String, i: Int, msg: String = ""): String =
+private def getPrintMsg(line: String, i: Int, msg: String = ""): String = //variable check should be done at every whitespace
   if i >= line.length then
     if msg(0) == '$' then readVariable(msg)
     else msg

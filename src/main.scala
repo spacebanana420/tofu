@@ -10,7 +10,8 @@ private val interpreter_version = "Tofu version 0.1"
   val argv = args.toVector
   readArgs(argv)
   val scripts = argv.filter(x => isScript(x))
-//   script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
+  script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
+  debug_printSeq("The following CLI args have been passed to the script", script_args)
   for s <- scripts do runScript(s)
 
 private def readArgs(args: Seq[String]) =
