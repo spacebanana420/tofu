@@ -18,6 +18,7 @@ Tofu has a small specification and feature-set. You can begin learning how to us
 
 * **[Tofu syntax and instruction set](doc/instructions.md)**
 * **[Conditions and branches](doc/conditions.md)**
+* **[Variables](doc/variables.md)**
 
 ## Building from source
 
