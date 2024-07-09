@@ -8,7 +8,7 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def lineType(line: String, types: Vector[String] = Vector("set", "print", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
+private def lineType(line: String, types: Vector[String] = Vector("set", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith(line, types(i)) then types(i)
   else lineType(line, types, i+1)
@@ -49,12 +49,12 @@ private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector
   if i >= stack.length-1 then newstack
   else removeLastPointer(stack, newstack :+ stack(i), i+1)
 
-private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, runningfuncs: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
+private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
   if i < s.length then
-    if runningfuncs > 0 && startsWith(s(i), "end") then
+    if pointer_stack.length > 0 && startsWith(s(i), "end") then
       val new_i = pointer_stack(pointer_stack.length-1)
       debugMessage(s"Found the end of a function, returning to $new_i")
-      loopScript(s, ifunc, nfunc, new_i, runningfuncs-1, removeLastPointer(pointer_stack))
+      loopScript(s, ifunc, nfunc, new_i, removeLastPointer(pointer_stack))
     else
       val linetype = lineType(s(i))
       if linetype == "stop" then closeTofu()
@@ -62,21 +62,28 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "function" =>
           val afterfunc = skipFunction(s, i+1)
           debugMessage(s"Skipping function at ${s(i)}")
-          loopScript(s, ifunc, nfunc, afterfunc, runningfuncs, pointer_stack)
+          loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
 //         case "set" =>
 //           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
         case "exec" =>
           exec(s(i))
-          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "goto" =>
-          loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), runningfuncs+1, pointer_stack :+ (i+1))
+          loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), pointer_stack :+ (i+1))
         case "print" =>
           printArg(s(i))
-          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "loop" =>
-          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+        case "if" =>
+          val condition = checkCondition(s(i))
+          val endif = findEndIF(s, i)
+          if condition then
+            loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+          else
+            loopScript(s, ifunc, nfunc, endif+1, pointer_stack)
         case _ =>
-          loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
 
 // def goToLine(line: String, ci: Seq[Int], cn: Seq[String]): Int =
 //   val name = getName(line, name_start)
