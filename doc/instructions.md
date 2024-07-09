@@ -11,7 +11,7 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * stop
 
 
-### set
+## set
 
 `set` assigns a variable which can be read later by some instructions. It follows the syntax `set NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
 
@@ -27,7 +27,7 @@ The line `print $message` will print "I love Tofu". Variables, just like functio
 
 At the moment, variables can only be of the string type, and so they are merely text. Numerical variables are a planned feature for a future version.
 
-### print
+## print
 
 `print` prints a message to the terminal output. It follows the syntax `print MESSAGE`. The message can be infinite in length as long as it remains all in one line. You can read variables and pass them to the message.
 
@@ -40,7 +40,7 @@ print I really love $food
 ```
 This will print "I really love tofu"
 
-### goto
+## goto
 
 `goto` executes a function if it exists. It follows the syntax `goto NAME`.
 
@@ -55,7 +55,7 @@ goto printstuff
 ```
 This script executes the function "printstuff", and as a result it prints "Fried tofu is yummy".
 
-### exec
+## exec
 
 `exec` Executes a system process, or command. It follows the syntax `exec PROGRAM ARG1 ARG2 ...`. PROGRAM represents the name of the command or the path to an executable file and is a mandatory argument to this instruction. The rest of the arguments are optional, and represent the arguments that will be passed to the program.
 
@@ -73,7 +73,7 @@ exec ffplay "/path/with spaces/image name.png"
 ```
 This executes the commands "ffmpeg -i /path/to/file.png newfile.jpg" and "ffplay /path/with spaces/image name.png". On the second command, the second argument is contained inside quotation marks to indicate that the spaces inside should not represent new arguments.
 
-### stop
+## stop
 
 `stop` stops the execution of the script immediately and has no additional syntax or arguments.
 
