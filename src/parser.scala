@@ -11,7 +11,7 @@ def getName(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' then s
   else getName(line, i+1, s + line(i))
 
-private def getName_variable(line: String, i: Int, s: String = ""): String =
+def getName_variable(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
   else getName_variable(line, i+1, s + line(i))
 
@@ -20,7 +20,7 @@ private def findValStart(line: String, i: Int): Int =
   else if line(i) == ',' then findLineStart(line, i+1)
   else findValStart(line, i+1)
 
-private def findVariableVal(line: String, i: Int): String =
+def findVariableVal(line: String, i: Int): String =
   val valstart = findValStart(line, i)
   getName(line, valstart)
 

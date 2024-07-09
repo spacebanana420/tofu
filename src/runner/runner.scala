@@ -18,28 +18,25 @@ private def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   else if find == list(i) then i
   else findInList(find, list, i+1)
 
-private var var_i = Vector[Int]()
 private var var_name = Vector[String]()
 private var var_val = Seq[String]()
 // var script_args = Vector[String]()
 
 def runScript(path: String) =
   val script = readScript(path)
-  var_i = getVariables(script) //maybe variables should be checked at runtime instead
-  var_name = getVariableNames(script, var_i)
-  var_val = getVariableValues(script, var_i)
+
+//   val var_i = getVariables(script)
+//   var_name = getVariableNames(script, var_i)
+//   var_val = getVariableValues(script, var_i)
 
   val i_func = getFuncIndexes(script)
   val name_func = getFuncNames(script, i_func)
 
   debug_printSeq("Script in memory:", script)
-  debug_printSeq("Variable names:", var_name)
+//   debug_printSeq("Variable names:", var_name)
   debug_printSeq("Function names:", name_func)
 
   loopScript(script, i_func, name_func)
-
-//   val i_checkpoint = getCheckpoints(script)
-//   val name_checkpoint = getCheckpointNames(script, i_checkpoint)
 
 private def skipFunction(s: Seq[String], i: Int): Int =
   if i >= s.length then -1 //must not happen!!!!! functions must have an "end"
@@ -64,8 +61,9 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           val afterfunc = skipFunction(s, i+1)
           debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
-//         case "set" =>
-//           loopScript(s, ifunc, nfunc, i+1, runningfuncs, pointer_stack)
+        case "set" =>
+          setVariable(s(i))
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)

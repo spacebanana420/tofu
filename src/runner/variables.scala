@@ -15,6 +15,14 @@ private def readVariable(variable: String, i: Int = 0, v: String = ""): String =
   else if i == 0 then readVariable(variable, i+1, v)
   else readVariable(variable, i+1, v + variable(i))
 
+def setVariable(line: String) =
+  val start = findLineStart(line, 3)
+  val name = getName_variable(line, start)
+  val value = findVariableVal(line, start)
+  debugMessage(s"Assigning new variable of name $name and value $value")
+  var_name = var_name :+ name
+  var_val = var_val :+ value
+
 private def mkInt(num: String): Int =
   try num.toInt
   catch case e: Exception => 0
