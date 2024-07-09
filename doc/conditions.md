@@ -37,9 +37,9 @@ This will print "First", since 3 is equal to 3, but it will not print "Second", 
 
 ### Available operators
 
-* == - Equals to
-* != - Does not equal to
-* > - Is bigger than
-* >= - Is equal or bigger than
-* < - Is lesser than
-* <= - Is equal or lesser than
+* `==` - Equals to
+* `!=` - Does not equal to
+* `>` - Is bigger than
+* `>=` - Is equal or bigger than
+* `<` - Is lesser than
+* `<=` - Is equal or lesser than
