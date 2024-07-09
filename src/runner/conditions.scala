@@ -31,6 +31,6 @@ def checkCondition(line: String): Boolean =
     case "!=" => elements(0) != elements(2)
     case ">" => elements(0) > elements(2)
     case ">=" => elements(0) >= elements(2)
-    case "<=" => elements(0) <= elements(2)
     case "<" => elements(0) < elements(2)
+    case "<=" => elements(0) <= elements(2)
     case _ => false
