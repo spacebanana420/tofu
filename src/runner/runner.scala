@@ -116,15 +116,3 @@ def exec(line: String) =
   val cmd = mkcommand(line, i = cmd_start)
   debug_printSeq("Running command:", cmd)
   cmd.!<
-
-private def getPrintMsg(line: String, i: Int, msg: String = ""): String =
-  if i >= line.length then
-    if msg(0) == '$' then readVariable(msg)
-    else msg
-  else getPrintMsg(line, i+1, msg + line(i))
-
-def printArg(line: String) =
-  val msg_start = findLineStart(line, 5)
-  debugMessage(s"Printing parsing started at $msg_start")
-  val msg = getPrintMsg(line, msg_start)
-  println(msg)
