@@ -2,19 +2,22 @@
 
 Tofu is a barebones scripting language for people who have use-cases for using shell scripts but don't like their syntax, features, size or platform dependance. Tofu is platform-agnostic (except for the commands you run) and the language specification is very small.
 
+**This repository is brand-new and the program isn't fully ready to be used yet.**
+
 ## Requirements
 
 Tofu's official implementation is an interpreter written in Scala. To run said interpreter, all you need is:
 
 * Scala 3 or Java 8 or higher
 
-**This repository is brand-new and the program isn't ready to be used yet.**
+I also distribute x86_64 binaries for Linux, so if you happen to use a Linux system with this CPU architecture, you don't need Java or Scala.
 
 ## Documentation and getting started
 
 Tofu has a small specification and feature-set. You can begin learning how to use it in the links below
 
 * **[Tofu syntax and instruction set](doc/instructions.md)**
+* **[Conditions and branches](doc/conditions.md)**
 
 ## Building from source
 

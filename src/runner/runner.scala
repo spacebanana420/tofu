@@ -21,6 +21,7 @@ private def findInList(find: String, list: Seq[String], i: Int = 0): Int =
 private var var_i = Vector[Int]()
 private var var_name = Vector[String]()
 private var var_val = Seq[String]()
+// var script_args = Vector[String]()
 
 def runScript(path: String) =
   val script = readScript(path)
