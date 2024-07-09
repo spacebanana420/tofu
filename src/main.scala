@@ -25,9 +25,10 @@ private def isScript(arg: String): Boolean =
 
 private def printHelp() =
   println(
-    s"$interpreter_version\n\nUsage: tofu [script path] [arguments]\nExample: tofu /path/to/script.tofu"
-    + "\n\nAvailable arguments:\n\t--help - Prints this message\n\t--version - Prints the Tofu version"
+    s"$interpreter_version\n\nUsage: tofu [script path] [program arguments] [script arguments]\nExample: tofu /path/to/script.tofu"
+    + "\n\nAvailable program arguments:\n\t--help - Prints this message\n\t--version - Prints the Tofu version"
     + "\n\t--debug - Enables debug mode, the interpreter prints information on what it's doing"
+    + "\n\nYou can pass CLI arugments as global variables by passing arguments which do not start with '-' and are not paths leading to a readable file.\nExample: tofu script.tofu argument1 argument2 argument3\nInside the script, you can read the 3 arguments respectively with the $0, $1 and $2 variable calls"
   )
 
 private def printVersion() = println(interpreter_version)

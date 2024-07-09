@@ -23,9 +23,20 @@ set message, I love Tofu
 print $message
 ```
 
-The line `print $message` will print "I love Tofu". Variables, just like functions, have no privacy and are assigned on startup. This means that where the variable is located in the script does not matter at all to be read.
+The line `print $message` will print "I love Tofu". Variables, just like functions, have no privacy. This means that, once the variable is set, any part of the script from this point onwards can access it.
 
 At the moment, variables can only be of the string type, and so they are merely text. Numerical variables are a planned feature for a future version.
+
+You can also use the value of an already-existing variable to set the new one:
+
+```
+set variable1, 234
+set variable2, $variable1
+
+print $variable2
+```
+
+This will print "234".
 
 ## print
 

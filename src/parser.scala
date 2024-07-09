@@ -11,6 +11,10 @@ def getName(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' then s
   else getName(line, i+1, s + line(i))
 
+// def getFullString(line: String, i: Int, s: String = ""): String =
+//   if i >= line.length || line(i) == ' ' || line(i) == '\t' then s
+//   else getName(line, i+1, s + line(i))
+
 def getName_variable(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
   else getName_variable(line, i+1, s + line(i))
