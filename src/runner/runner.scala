@@ -96,9 +96,9 @@ def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   val name_start = findLineStart(line, 4)
   val name = getName(line, name_start)
   if name == "" then closeTofu(s"Syntax error!\nFunction at line:\n$line\nDoes not have a name!")
-  debugMessage(s"Calling function $name")
   val i = findInList(name, fn)
-  debugMessage(s"Moved to line ${fi(i)+1}")
+  if i == -1 then closeTofu(s"Syntax error!\nFunction of name '$name' at line:\n$line\nDoes not exist!")
+  debugMessage(s"Calling function '$name', moved to line ${fi(i)+1}")
   fi(i)+1
 
 private def addArg(args: Vector[String], arg: String): Vector[String] =
