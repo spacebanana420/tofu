@@ -75,3 +75,14 @@ def getVariableNames(script: Seq[String], indexes: Seq[Int], names: Vector[Strin
 
 def getVariableValues(script: Seq[String], indexes: Seq[Int]): Seq[String] =
   indexes.map(x => findVariableVal(script(x), 0))
+
+private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
+  if i >= script.length then start_count == end_count
+  else if start_count != end_count then false
+  else
+    val more_start = if startsWith(script(i), start_keyword) then 1 else 0
+    val more_end = if startsWith(script(i), end_keyword) then 1 else 0
+    verifyCode(script, start_keyword, end_keyword, start_count + more_start, end_count + more_end, i+1)
+
+def verifyFunctions(script: Seq[String]): Boolean = verifyCode(script, "function", "end")
+def verifyIfs(script: Seq[String]): Boolean = verifyCode(script, "if", "endif")

@@ -36,6 +36,8 @@ def runScript(path: String) =
 //   debug_printSeq("Variable names:", var_name)
   debug_printSeq("Function names:", name_func)
 
+  if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define wher they end!")
+  if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define wher they end!")
   loopScript(script, i_func, name_func)
 
 private def skipFunction(s: Seq[String], i: Int): Int =
@@ -93,6 +95,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   val name_start = findLineStart(line, 4)
   val name = getName(line, name_start)
+  if name == "" then closeTofu(s"Syntax error!\nFunction at line:\n$line\nDoes not have a name!")
   debugMessage(s"Calling function $name")
   val i = findInList(name, fn)
   debugMessage(s"Moved to line ${fi(i)+1}")
@@ -120,5 +123,6 @@ def exec(line: String) =
   val cmd_start = findLineStart(line, 4)
   debugMessage(s"Exec parsing started at $cmd_start")
   val cmd = mkcommand(line, i = cmd_start)
+  if cmd.length == 0 then closeTofu(s"Syntax error! Command is empty at line:\n$line\n")
   debug_printSeq("Running command:", cmd)
   cmd.!<
