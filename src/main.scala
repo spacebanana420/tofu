@@ -4,7 +4,7 @@ import tofu.reader.*, tofu.parser.*, tofu.runner.*
 import java.io.File
 
 var debug_mode: Boolean = false
-private val interpreter_version = "Tofu version 0.1"
+private val interpreter_version = "Tofu version 0.2"
 
 @main def main(args: String*) =
   val argv = args.toVector
