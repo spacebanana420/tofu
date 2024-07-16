@@ -1,3 +1,5 @@
+//Random example for testing tofu features
+
 function encode
   exec ffmpeg -loglevel 0 -i "/home/space/Pictures/Kirby Shook_square20x.png" -filter:v $ffargs test.png
 end
