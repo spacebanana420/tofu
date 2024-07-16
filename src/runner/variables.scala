@@ -20,12 +20,25 @@ private def readVariable(variable: String, i: Int = 0, v: String = ""): String =
   else if i == 0 then readVariable(variable, i+1, v)
   else readVariable(variable, i+1, v + variable(i))
 
-def setVariable(line: String) =
+private def getVariableProperties(line: String): Vector[String] =
   val start = findLineStart(line, 3)
   val name = getName_variable(line, start)
   val value = findVariableVal(line, start)
+  if name.length == 0 then
+    closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a name!")
+  if value.length == 0 then
+    closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a value!")
+  if var_name.contains(name) then
+    closeTofu(s"Variable declaration error at line: \n$line\n\nVariable of name $name already exists!")
+
   debugMessage(s"Assigning new variable of name $name and value $value")
+  Vector(name, value)
+
+def setVariable(line: String) =
+  val variable = getVariableProperties(line)
+  val name = variable(0); val value = variable(1)
   var_name = var_name :+ name
+
   if value(0) == '$' then
     val realvalue = readVariable(value)
     if realvalue != value then debugMessage(s"Value $value for variable $name points to another variable, the returned value is $realvalue")
