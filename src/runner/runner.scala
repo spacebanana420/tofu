@@ -36,8 +36,8 @@ def runScript(path: String) =
 //   debug_printSeq("Variable names:", var_name)
   debug_printSeq("Function names:", name_func)
 
-  if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define wher they end!")
-  if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define wher they end!")
+  if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
+  if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
   loopScript(script, i_func, name_func)
 
 private def skipFunction(s: Seq[String], i: Int): Int =

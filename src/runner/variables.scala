@@ -8,17 +8,35 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def tryGlobalVariable(variable: String): String =
-  val num = mkInt(variable)
-  if num >= 0 && script_args.length > num then script_args(num) else variable
+def getName_variable(line: String, i: Int, s: String = ""): String =
+  if i >= line.length || line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
+  else getName_variable(line, i+1, s + line(i))
 
-private def readVariable(variable: String, i: Int = 0, v: String = ""): String =
+private def findValStart(line: String, i: Int): Int =
+  if i >= line.length then -1
+  else if line(i) == ',' then findLineStart(line, i+1)
+  else findValStart(line, i+1)
+
+def findVariableVal(line: String, i: Int): String =
+  val valstart = findValStart(line, i)
+  parseString(line, valstart)
+
+def readVariable_safe(str: String): String = if str(0) == '$' then readVariable(str) else str
+
+def readVariable(variable: String, i: Int = 0, v: String = ""): String =
   if i >= variable.length || variable(i) == ' ' then
     val var_index = findInList(v, var_name)
-    if var_index == -1 then tryGlobalVariable(v)
-    else var_val(var_index)
+    if var_index == -1 then tryGlobalVariable(v, variable)
+    else
+      val obtained_value = var_val(var_index)
+      debugMessage(s"The string portion $variable points to a real variable, the returned value is $obtained_value")
+      obtained_value
   else if i == 0 then readVariable(variable, i+1, v)
   else readVariable(variable, i+1, v + variable(i))
+
+private def tryGlobalVariable(variable: String, original: String): String =
+  val num = mkInt(variable)
+  if num >= 0 && script_args.length > num then script_args(num) else original
 
 private def getVariableProperties(line: String, keyword: String): Vector[String] =
   val start = findLineStart(line, keyword.length)
@@ -30,21 +48,15 @@ private def getVariableProperties(line: String, keyword: String): Vector[String]
     closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a value!")
   if var_name.contains(name) then
     closeTofu(s"Variable declaration error at line: \n$line\n\nVariable of name $name already exists!")
-
-  debugMessage(s"Assigning new variable of name $name and value $value")
   Vector(name, value)
 
 def setVariable(line: String) =
   val variable = getVariableProperties(line, "set")
   val name = variable(0); val value = variable(1)
-  var_name = var_name :+ name
 
-  if value(0) == '$' then
-    val realvalue = readVariable(value)
-    if realvalue != value then debugMessage(s"Value $value for variable $name points to another variable, the returned value is $realvalue")
-    var_val = var_val :+ realvalue
-  else
-    var_val = var_val :+ value
+  debugMessage(s"Assigning new variable of name $name and value $value")
+  var_name = var_name :+ name
+  var_val = var_val :+ value
 
 // def setVariable_int(line: String) =
 //   val variable = getVariableProperties(line, "int")
@@ -68,6 +80,12 @@ private def mkInt(num: String): Int =
 private def math_mkInt(num: String): Int =
   try num.toInt
   catch case e: Exception => 0
+
+def isInt(value: String, i: Int = 0): Boolean =
+  val digits = Vector('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+  if i >= value.length then true
+  else if !digits.contains(value(i)) then false
+  else isInt(value, i+1)
 
 private def sum_nums(nums: Seq[Int], i: Int = 0, sum: Int = 0): Int =
   if i >= nums.length then sum
