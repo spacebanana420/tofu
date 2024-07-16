@@ -7,6 +7,7 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * set
 * print
 * goto
+* return
 * exec
 * stop
 
@@ -65,6 +66,24 @@ end
 goto printstuff
 ```
 This script executes the function "printstuff", and as a result it prints "Fried tofu is yummy".
+
+## return
+
+`return` closes a function earlier, before reaching its `end`.
+
+Example:
+
+```
+function printstuff
+  print Fried tofu is yummy
+  return
+  print Baguette
+end
+
+goto printstuff
+```
+
+"Baguette" is never printed, because the line before returns the function, closing it earlier
 
 ## exec
 

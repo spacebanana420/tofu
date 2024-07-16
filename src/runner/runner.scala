@@ -51,9 +51,9 @@ private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector
 
 private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
   if i < s.length then
-    if pointer_stack.length > 0 && startsWith(s(i), "end") then
+    if pointer_stack.length > 0 && (startsWith(s(i), "end") || startsWith(s(i), "return")) then
       val new_i = pointer_stack(pointer_stack.length-1)
-      debugMessage(s"Found the end of a function, returning to $new_i")
+      debugMessage(s"Found the end or reteurn of a function, returning to $new_i")
       loopScript(s, ifunc, nfunc, new_i, removeLastPointer(pointer_stack))
     else
       val linetype = lineType(s(i))

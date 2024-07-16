@@ -28,18 +28,24 @@ def findEndIF(script: Seq[String], i: Int): Int =
 def checkCondition(line: String): Boolean =
   val start = findLineStart(line, 2)
   val elements = conditionElements(line, start)
-  val e0 = if elements(0)(0) == '$' then readVariable(elements(0)) else elements(0)
-  val e1 = if elements(2)(0) == '$' then readVariable(elements(2)) else elements(2)
-  debugMessage(s"Running if statement: [element 0] $e0 [element 1] $e1 [operator] ${elements(1)}")
-  if elements.length == 1 then true
-  else
-    val condition = elements(1) match
-      case "==" => e0 == e1
-      case "!=" => e0 != e1
-      case ">" => e0 > e1
-      case ">=" => e0 >= e1
-      case "<" => e0 < e1
-      case "<=" => e0 <= e1
-      case _ => false
-    debugMessage(s"Condition returned $condition")
-    condition
+  elements.length match
+    case 0 =>
+      closeTofu(s"Syntax error! Condition at line\n$line\nlacks elements and an operator to compare them to!")
+      false
+    case 1 =>
+      debugMessage("If statement has only 1 element, returning true")
+      true
+    case _ =>
+      val e0 = if elements(0)(0) == '$' then readVariable(elements(0)) else elements(0)
+      val e1 = if elements(2)(0) == '$' then readVariable(elements(2)) else elements(2)
+      debugMessage(s"Running if statement: [element 0] $e0 [element 1] $e1 [operator] ${elements(1)}")
+      val condition = elements(1) match
+        case "==" => e0 == e1
+        case "!=" => e0 != e1
+        case ">" => e0 > e1
+        case ">=" => e0 >= e1
+        case "<" => e0 < e1
+        case "<=" => e0 <= e1
+        case _ => false
+      debugMessage(s"Condition returned $condition")
+      condition

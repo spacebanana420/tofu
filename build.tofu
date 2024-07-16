@@ -1,13 +1,22 @@
-function fullbuild
+function build-scala
   exec bash build.sh
+end
+
+function build-bootstrap
   print Building bootstrap JAR
   exec scala-cli --power package src -f -o build/tofu-bootstrap.jar
+end
 
-  print Building assembly JAR
-  exec scala-cli --power package src --assembly --preamble=false -f -o build/tofu-java.jar
+function build-java
+  print Building assembly JARs
+  exec scala-cli --power package src --assembly --preamble=false -f --jvm 8 -o build/tofu-java.jar
+  exec scala-cli --power package src --assembly --preamble=false -f --jvm 19 -o build/tofu-java-19.jar
+end
 
-  print Building native binary (Linux x86_64) (GraalVM)
-  exec native-image --no-fallback --static -O3 -jar build/tofu-java.jar -o build/tofu
+function fullbuild
+  goto build-scala
+  goto build-java
+  goto build-bootstrap
 
   print Packaging native binary
   exec 7z a -mx5 -mmt0 build/tofu-linux-x86_64.zip build/tofu
@@ -20,7 +29,7 @@ if $0 == help
 endif
 
 if $0 == scala
-  exec bash build.sh
+  goto build-scala
   stop
 endif
 
@@ -30,17 +39,14 @@ if $0 == full
 endif
 
 if $0 == java
-  print Building assembly JAR
-  exec scala-cli --power package src --assembly --preamble=false -f -o build/tofu-java.jar
+  goto build-java
   stop
 endif
 
 if $0 == bootstrap
-  print Building bootstrap JAR
-  exec scala-cli --power package src -f -o build/tofu-bootstrap.jar
+  goto build-bootstrap
   stop
 endif
 
-exec bash build.sh
-print Building assembly JAR
-exec scala-cli --power package src --assembly --preamble=false -f -o build/tofu-java.jar
+goto build-scala
+goto build-java
