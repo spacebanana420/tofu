@@ -38,3 +38,11 @@ tofu script1.tofu script2.tofu "i like tofu" "kasane teto" "baguette"
 ```
 
 For both `script1.tofu` and `script2.tofu`, their global variables `$0`, `$1` and `$2` are respectively "i like tofu", "kasane teto" and "baguette".
+
+If an argument variable does not exist, attempting to read the variable will only return its name. For example, reading $7 when there aren't 8 argument variables will give you the value 7. You can use this to check for global variables:
+
+```
+if $0 != 0
+  print The argument $0 has been passed as a variable!
+endif
+```
