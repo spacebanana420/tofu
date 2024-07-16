@@ -44,4 +44,4 @@ def debug_printSeq(msg: String, s: Seq[String]) =
 
 def closeTofu(msg: String = "") =
   if msg.length > 0 then println(msg)
-  System.exit
+  System.exit(1)

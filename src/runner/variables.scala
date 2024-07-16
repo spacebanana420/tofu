@@ -74,12 +74,12 @@ def setVariable(line: String) =
 //   int_val = int_val :+ num
 
 private def mkInt(num: String): Int =
-  try num.toInt
-  catch case e: Exception => -1
+  if isInt(num) then num.toInt
+  else -1
 
 private def math_mkInt(num: String): Int =
-  try num.toInt
-  catch case e: Exception => 0
+  if isInt(num) then num.toInt
+  else 0
 
 def isInt(value: String, i: Int = 0): Boolean =
   val digits = Vector('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')

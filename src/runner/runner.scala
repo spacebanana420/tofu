@@ -95,9 +95,10 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   val name_start = findLineStart(line, 4)
   val name = getName(line, name_start)
-  if name == "" then closeTofu(s"Syntax error!\nFunction at line:\n$line\nDoes not have a name!")
+  if name == "" then closeTofu(s"Syntax error! Function at line:\n$line\nDoes not have a name!")
   val i = findInList(name, fn)
-  if i == -1 then closeTofu(s"Syntax error!\nFunction of name '$name' at line:\n$line\nDoes not exist!")
+  if i == -1 then
+    closeTofu(s"Syntax error! Function of name '$name' at line:\n$line\nDoes not exist!")
   debugMessage(s"Calling function '$name', moved to line ${fi(i)+1}")
   fi(i)+1
 
