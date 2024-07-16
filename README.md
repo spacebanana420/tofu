@@ -2,9 +2,10 @@
 
 Tofu is a barebones scripting language for people who have use-cases for using shell scripts but don't like their syntax, features, size or platform dependance. Tofu is platform-agnostic (except for the commands you run) and the language specification is very small.
 
-**This repository is brand-new and the program isn't fully ready to be used yet.**
 
-## Requirements
+## Running Tofu
+
+You can download the latest version of Tofu [here](https://github.com/spacebanana420/tofu/releases)
 
 Tofu's official implementation is an interpreter written in Scala. To run said interpreter, all you need is:
 
