@@ -20,8 +20,8 @@ private def readVariable(variable: String, i: Int = 0, v: String = ""): String =
   else if i == 0 then readVariable(variable, i+1, v)
   else readVariable(variable, i+1, v + variable(i))
 
-private def getVariableProperties(line: String): Vector[String] =
-  val start = findLineStart(line, 3)
+private def getVariableProperties(line: String, keyword: String): Vector[String] =
+  val start = findLineStart(line, keyword.length)
   val name = getName_variable(line, start)
   val value = findVariableVal(line, start)
   if name.length == 0 then
@@ -35,7 +35,7 @@ private def getVariableProperties(line: String): Vector[String] =
   Vector(name, value)
 
 def setVariable(line: String) =
-  val variable = getVariableProperties(line)
+  val variable = getVariableProperties(line, "set")
   val name = variable(0); val value = variable(1)
   var_name = var_name :+ name
 
@@ -45,6 +45,21 @@ def setVariable(line: String) =
     var_val = var_val :+ realvalue
   else
     var_val = var_val :+ value
+
+// def setVariable_int(line: String) =
+//   val variable = getVariableProperties(line, "int")
+//   val name = variable(0); val value = variable(1)
+//   int_name = int_name :+ name
+//
+//   if value(0) == '$' then
+//     val realvalue = readVariable(value)
+//     if realvalue != value then debugMessage(s"Value $value for variable $name points to another variable, the returned value is $realvalue")
+//     if num == -1 then closeTofu(s"Integer variable declaration error at line: \n$line\n\nValue $num is not an integer number!")
+//     val num = mkInt(realvalue)
+//   else
+//     if num == -1 then closeTofu(s"Integer variable declaration error at line: \n$line\n\nValue $num is not an integer number!")
+//     val num = mkInt(value)
+//   int_val = int_val :+ num
 
 private def mkInt(num: String): Int =
   try num.toInt
