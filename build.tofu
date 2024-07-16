@@ -10,7 +10,7 @@ end
 function build-java
   print Building assembly JARs
   exec scala-cli --power package src --assembly --preamble=false -f --jvm 8 -o build/tofu-java.jar
-  exec scala-cli --power package src --assembly --preamble=false -f --jvm 19 -o build/tofu-java-19ZZ.jar
+  exec scala-cli --power package src --assembly --preamble=false -f --jvm 19 -o build/tofu-java-19.jar
 end
 
 function fullbuild
