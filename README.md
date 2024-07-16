@@ -15,7 +15,7 @@ I also distribute x86_64 binaries for Linux, so if you happen to use a Linux sys
 
 ## Documentation and getting started
 
-Tofu has a small specification and feature-set. You can begin learning how to use it in the links below.
+Tofu has a small specification and feature-set. You can begin learning how to use it in the links below. The following documentation is written for **Tofu 0.2**
 
 * **[Syntax and instruction set](doc/instructions.md)**
 * **[Conditions and branches](doc/conditions.md)**
