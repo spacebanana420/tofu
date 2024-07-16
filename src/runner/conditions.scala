@@ -36,8 +36,8 @@ def checkCondition(line: String): Boolean =
       debugMessage("If statement has only 1 element, returning true")
       true
     case _ =>
-      val e0 = if elements(0)(0) == '$' then readVariable(elements(0)) else elements(0)
-      val e1 = if elements(2)(0) == '$' then readVariable(elements(2)) else elements(2)
+      val e0 = readVariable_safe(elements(0))
+      val e1 = readVariable_safe(elements(2))
       debugMessage(s"Running if statement: [element 0] $e0 [element 1] $e1 [operator] ${elements(1)}")
       val condition = elements(1) match
         case "==" => e0 == e1

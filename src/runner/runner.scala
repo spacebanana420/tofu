@@ -42,7 +42,7 @@ def runScript(path: String) =
 
 private def skipFunction(s: Seq[String], i: Int): Int =
   if i >= s.length then -1 //must not happen!!!!! functions must have an "end"
-  else if startsWith(s(i), "end") then i+1
+  else if startsWith_strict(s(i), "end") then i+1
   else skipFunction(s, i+1)
 
 private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector(), i: Int = 0): Vector[Int] =
@@ -51,7 +51,7 @@ private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector
 
 private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
   if i < s.length then
-    if pointer_stack.length > 0 && (startsWith(s(i), "end") || startsWith(s(i), "return")) then
+    if pointer_stack.length > 0 && (startsWith_strict(s(i), "end") || startsWith(s(i), "return")) then
       val new_i = pointer_stack(pointer_stack.length-1)
       debugMessage(s"Found the end or return of a function, returning to $new_i")
       loopScript(s, ifunc, nfunc, new_i, removeLastPointer(pointer_stack))
@@ -102,8 +102,7 @@ def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   fi(i)+1
 
 private def addArg(args: Vector[String], arg: String): Vector[String] =
-  if arg(0) == '$' then args :+ readVariable(arg)
-  else args :+ arg
+  args :+ readVariable_safe(arg)
 
 private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String = "", i: Int = 0, ignore_spaces: Boolean = false): Vector[String] =
   if i >= line.length then

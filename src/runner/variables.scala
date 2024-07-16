@@ -36,7 +36,7 @@ def readVariable(variable: String, i: Int = 0, v: String = ""): String =
 
 private def tryGlobalVariable(variable: String, original: String): String =
   val num = mkInt(variable)
-  if num >= 0 && script_args.length > num then script_args(num) else original
+  if num >= 0 && script_args.length > num then script_args(num) else variable
 
 private def getVariableProperties(line: String, keyword: String): Vector[String] =
   val start = findLineStart(line, keyword.length)
