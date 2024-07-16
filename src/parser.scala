@@ -16,12 +16,12 @@ def startsWith_strict(line: String, keyword: String, tmp: String = "", i: Int = 
     tmp == keyword && (line(i) == ' ' || line(i) == '\t')
   else startsWith_strict(line, keyword, tmp + line(i), i+1)
 
-def exactMatch(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
-  if i >= line.length then
-    tmp == keyword
-  else if line(i) != ' ' && line(i) != '\t' then
-    exactMatch(line, keyword, tmp + line(i), i+1)
-  else exactMatch(line, keyword, tmp, i+1)
+// def exactMatch(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
+//   if i >= line.length then
+//     tmp == keyword
+//   else if line(i) != ' ' && line(i) != '\t' then
+//     exactMatch(line, keyword, tmp + line(i), i+1)
+//   else exactMatch(line, keyword, tmp, i+1)
 
 def getName(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' then s

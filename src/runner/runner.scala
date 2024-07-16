@@ -25,15 +25,10 @@ var script_args = Vector[String]()
 def runScript(path: String) =
   val script = readScript(path)
 
-//   val var_i = getVariables(script)
-//   var_name = getVariableNames(script, var_i)
-//   var_val = getVariableValues(script, var_i)
-
   val i_func = getFuncIndexes(script)
   val name_func = getFuncNames(script, i_func)
 
   debug_printSeq("Script in memory:", script)
-//   debug_printSeq("Variable names:", var_name)
   debug_printSeq("Function names:", name_func)
 
   if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
@@ -85,11 +80,6 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
             loopScript(s, ifunc, nfunc, endif+1, pointer_stack)
         case _ =>
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-
-// def goToLine(line: String, ci: Seq[Int], cn: Seq[String]): Int =
-//   val name = getName(line, name_start)
-//   val i = findInList(line, cn)
-//   ci(i)
 
 //for later: process function and arguments all in a vector, similar to exec
 def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
