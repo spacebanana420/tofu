@@ -13,6 +13,10 @@ Tofu's official implementation is an interpreter written in Scala. To run said i
 
 I also distribute x86_64 binaries for Linux, so if you happen to use a Linux system with this CPU architecture, you don't need Java or Scala.
 
+Once Tofu is downloaded, you can run it with Scala or Java (or without a runtime, in case of Linux) depending on the JAR/binary you download. You can run `tofu --help` for a quick help screen. To run a script, you can run `tofu script.tofu` (assuming the name is "script.tofu").
+
+You can also pass CLI arguments as global variables: `tofu script.tofu var1 var2 var3`
+
 ## Documentation and getting started
 
 Tofu has a small specification and feature-set. You can begin learning how to use it in the links below. The following documentation is written for **Tofu 0.2**

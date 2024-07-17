@@ -4,7 +4,8 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 
 ### Available instructions
 
-* set
+* string
+* int
 * print
 * goto
 * return
