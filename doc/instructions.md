@@ -13,32 +13,55 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * stop
 
 
-## set
+## string
 
-`set` assigns a variable which can be read later by some instructions. It follows the syntax `set NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
+`string` assigns a variable of type `string` (text-based) which can be read later by many instructions. It follows the syntax `string NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
 
 Example:
 
 ```
-set message, I love Tofu
+string message, I love Tofu
 
 print $message
 ```
 
 The line `print $message` will print "I love Tofu". Variables, just like functions, have no privacy. This means that, once the variable is set, any part of the script from this point onwards can access it.
 
-At the moment, variables can only be of the string type, and so they are merely text. Numerical variables are a planned feature for a future version.
-
 You can also use the value of an already-existing variable to set the new one:
 
 ```
-set variable1, 234
-set variable2, $variable1
+string variable1, baguette
+string variable2, $variable1
 
 print $variable2
 ```
 
-This will print "234".
+This will print "baguette".
+
+## int
+
+`int` assigns a variable of type `int` (numeric) which can be read later by many instructions. It follows the syntax `int NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
+
+Example:
+
+```
+int message, 234
+
+print $message
+```
+
+The line `print $message` will print "234". Variables, just like functions, have no privacy. This means that, once the variable is set, any part of the script from this point onwards can access it.
+
+You can also use the value of an already-existing variable to set the new one:
+
+```
+string variable1, 4235
+string variable2, $variable1
+
+print $variable2
+```
+
+This will print "4235".
 
 ## print
 
