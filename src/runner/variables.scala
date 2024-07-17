@@ -84,7 +84,7 @@ def setVariable_int(line: String) =
 def isInt(value: String, i: Int = 0): Boolean =
   val digits = Vector('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
   if i >= value.length then true
-  else if !digits.contains(value(i)) then false
+  else if !digits.contains(value(i)) && (i != 0 || value(i) != '-') then false
   else isInt(value, i+1)
 
 def mkInt(num: String): Int =
