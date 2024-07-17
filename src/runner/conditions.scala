@@ -34,8 +34,15 @@ def checkCondition(line: String): Boolean =
       closeTofu(s"Syntax error! Condition at line\n$line\nlacks elements and an operator to compare them to!")
       false
     case 1 =>
-      debugMessage("If statement has only 1 element, returning true")
-      true
+      debugMessage("If statement has only 1 element, returning true if variable exists or is not a variable")
+      val variable = readVariable_class_safe(elements(0))
+      elements(0)(0) != '$' || variable.vartype != variable_type.none
+    case 2 =>
+      if elements(1) == "exists" then
+        readVariable_class_safe(elements(0)).vartype != variable_type.none
+      else if elements(1) == "!exists" then
+        readVariable_class_safe(elements(0)).vartype == variable_type.none
+      else false
     case _ =>
       val e0 = readVariable_class_safe(elements(0))
       val e1 = readVariable_class_safe(elements(2))
