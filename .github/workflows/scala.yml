@@ -1,0 +1,56 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Scala CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: setup-scala
+      uses: olafurpg/setup-scala@v14
+    
+    - name: scala-cli-setup-action
+      uses: VirtusLab/scala-cli-setup@v1.4.0
+    
+    - name: Compile (Scala)
+      run: |
+        mkdir build
+        scala-cli --power package src --library -f -o build/tofu.jar
+        
+    - name: Compile (Java)
+      run: |
+        scala-cli --power package src --assembly --preamble=false -f -o build/tofu-java.jar
+
+    - name: "Upload artifact (Scala)"
+      uses: actions/upload-artifact@v4
+      with:
+        name: tofu-scala
+        path: build/tofu.jar
+        
+    - name: "Upload artifact (Java)"
+      uses: actions/upload-artifact@v4
+      with:
+        name: tofu-java
+        path: build/tofu-java.jar
