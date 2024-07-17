@@ -8,7 +8,7 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def lineType(line: String, types: Vector[String] = Vector("set", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
+private def lineType(line: String, types: Vector[String] = Vector("string", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith(line, types(i)) then types(i)
   else lineType(line, types, i+1)
@@ -18,9 +18,15 @@ private def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   else if find == list(i) then i
   else findInList(find, list, i+1)
 
-private var var_name = Vector[String]()
-private var var_val = Seq[String]()
-var script_args = Vector[String]()
+var var_name = Vector[String]()
+var var_type = Vector[variable_type]()
+var var_pointer = Vector[Int]()
+
+var var_val = Seq[String]()
+var string_val = Seq[String]()
+var int_val = Seq[Int]()
+
+// var script_args = Vector[String]()
 
 def runScript(path: String) =
   val script = readScript(path)
@@ -58,8 +64,14 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           val afterfunc = skipFunction(s, i+1)
           debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
-        case "set" =>
-          setVariable(s(i))
+//         case "set" =>
+//           setVariable_str(s(i))
+//           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+        case "int" =>
+          setVariable_int(s(i))
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+        case "string" =>
+          setVariable_str(s(i))
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "exec" =>
           exec(s(i))
@@ -93,7 +105,7 @@ def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
   fi(i)+1
 
 private def addArg(args: Vector[String], arg: String): Vector[String] =
-  args :+ readVariable_safe(arg)
+  args :+ readVariable_str_safe(arg)
 
 private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String = "", i: Int = 0, ignore_spaces: Boolean = false): Vector[String] =
   if i >= line.length then

@@ -25,6 +25,7 @@ def findEndIF(script: Seq[String], i: Int): Int =
   else if startsWith(script(i), "endif") then i
   else findEndIF(script, i+1)
 
+
 def checkCondition(line: String): Boolean =
   val start = findLineStart(line, 2)
   val elements = conditionElements(line, start)
@@ -36,16 +37,49 @@ def checkCondition(line: String): Boolean =
       debugMessage("If statement has only 1 element, returning true")
       true
     case _ =>
-      val e0 = readVariable_safe(elements(0))
-      val e1 = readVariable_safe(elements(2))
-      debugMessage(s"Running if statement: [element 0] $e0 [element 1] $e1 [operator] ${elements(1)}")
+      val e0 = readVariable_class_safe(elements(0))
+      val e1 = readVariable_class_safe(elements(2))
+      debugMessage(s"Running if statement: [element 0] ${elements(0)} [element 1] ${elements(2)} [operator] ${elements(1)}")
       val condition = elements(1) match
-        case "==" => e0 == e1
-        case "!=" => e0 != e1
-        case ">" => e0 > e1
-        case ">=" => e0 >= e1
-        case "<" => e0 < e1
-        case "<=" => e0 <= e1
-        case _ => false
+        case "==" => compare_str(e0, e1, true)
+        case "!=" => compare_str(e0, e1, false)
+        case _ => compare_int(e0, e1, elements(1))
       debugMessage(s"Condition returned $condition")
       condition
+
+private def compare_str(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
+  debugMessage("Comparing strings")
+  val str0 =
+    if e0.vartype == variable_type.none then e0.input
+    else e0.valueToString()
+
+  val str1 =
+    if e1.vartype == variable_type.none then e1.input
+    else e1.valueToString()
+
+  if equals then str0 == str1
+  else str0 != str1
+
+private def compare_int(e0: TofuVar, e1: TofuVar, operator: String): Boolean =
+  debugMessage("Comparing ints")
+  val int0 =
+    if e0.vartype == variable_type.none then condition_mkint(e0.input)
+    else if e0.vartype == variable_type.integer then
+      e0.value_int
+    else e0.valueToString().length
+  val int1 =
+    if e1.vartype == variable_type.none then condition_mkint(e1.input)
+    else if e1.vartype == variable_type.integer then
+      e1.value_int
+    else e1.valueToString().length
+
+  operator match
+    case ">" => int0 > int1
+    case ">=" => int0 >= int1
+    case "<" => int0 < int1
+    case "<=" => int0 <= int1
+    case _ => false
+
+private def condition_mkint(in: String): Int =
+  val i = mkInt(in)
+  if i == -1 && in != "-1" then in.length else i

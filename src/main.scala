@@ -10,9 +10,19 @@ private val interpreter_version = "Tofu version 0.2"
   val argv = args.toVector
   readArgs(argv)
   val scripts = argv.filter(x => isScript(x))
-  script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
+  val script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
+  addGlobalVariables(script_args)
   debug_printSeq("The following CLI args have been passed to the script", script_args)
+  debug_printSeq("Startup variables:", var_name)
   for s <- scripts do runScript(s)
+
+private def addGlobalVariables(vars: Vector[String], i: Int = 0): Unit =
+  if i < vars.length then
+    var_name = var_name :+ i.toString()
+    var_type = var_type :+ variable_type.string
+    string_val = string_val :+ vars(i)
+    var_pointer = var_pointer :+ string_val.length-1
+    addGlobalVariables(vars, i+1)
 
 private def readArgs(args: Seq[String]) =
   if args.contains("--debug") then debug_mode = true

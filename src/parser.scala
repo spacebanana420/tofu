@@ -1,7 +1,7 @@
 package tofu.parser
 
 import tofu.reader.findLineStart
-import tofu.runner.readVariable_safe
+import tofu.runner.{readVariable_str_safe, readVariable_int_safe}
 import tofu.debug_printSeq
 
 def startsWith(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
@@ -75,6 +75,6 @@ def mkstr(line: String, s_seq: Vector[String] = Vector(), arg: String = "", i: I
     mkstr(line, s_seq, arg + line(i), i+1, ignore_spaces)
 
 def parseString(line: String, start: Int): String =
-  val str = mkstr(line, i = start).map(x => readVariable_safe(x))
+  val str = mkstr(line, i = start).map(x => readVariable_str_safe(x))
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
