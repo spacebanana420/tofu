@@ -41,7 +41,7 @@ jobs:
         
     - name: Compile (Java)
       run: |
-        scala-cli --power package src --assembly --preamble=false -f -o build/tofu.jar
+        scala-cli --power package src --assembly --preamble=false -f -o build/tofu-java.jar
 
     - name: "Upload artifact (Scala)"
       uses: actions/upload-artifact@v4
@@ -53,4 +53,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tofu-java
-        path: build/tofu.jar
+        path: build/tofu-java.jar
