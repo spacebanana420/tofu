@@ -29,10 +29,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         
-    - name: Install Scala-CLI
-      run: curl -fL https://github.com/VirtusLab/scala-cli/releases/download/v0.1.20/scala-cli-0.1.20-linux-x86_64.gz | gzip -d > scala-cli && chmod +x scala-cli && sudo mv scala-cli /usr/local/bin/
+    - name: setup-scala
+      uses: olafurpg/setup-scala@v14
     
-    - name: Compile Scala project
-      run: |
-        mkdir build
-        scala-cli --power package src --library -f -o build/tofu.jar
+    - name: scala-cli-setup-action
+      uses: VirtusLab/scala-cli-setup@v1.4.0
+    
+    - name: Compile
+      run: ./scala-cli --power package src --library -f -o build/tofu.jar
