@@ -1,3 +1,8 @@
+function build-scalacli
+  exec scala-cli --power package src --assembly --preamble=false -f --jvm 11 -o build/tofu.jar
+  exec 7z d build/tofu.jar scala LICENSE NOTICE library.properties rootdoc.txt
+end
+
 function build-scala
   exec bash build.sh
 end
@@ -26,13 +31,25 @@ function fullbuild
 end
 
 if $0 == help
-  print Available options: scala, full, java, bootstrap
+  print Available options: light, scala, full, java, bootstrap
+  print " "
+  print light - lightweight JAR (requires Scala) (Uses Scala-CLI and 7zip instead of scalac)
+  print scala - lightweight JAR (requires Scala)
+  print java - assembly JAR (requires Java only)
+  print bootstrap - lightweight JAR with shell preamble (requires Scala) (is executed directly)
+  print full - portable executable (requires GraalVM to build)
+  print " "
   print In absence of an option, a lightweight JAR and assembly JAR are built
   stop
 endif
 
 if $0 == scala
   goto build-scala
+  stop
+endif
+
+if $0 == light
+  goto build-scalacli
   stop
 endif
 
