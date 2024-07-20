@@ -11,6 +11,7 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * return
 * exec
 * stop
+* sleep
 
 
 ## string
@@ -140,3 +141,18 @@ print Oregano
 ```
 This script prints "Fried tofu", but never ends up printing "Oregano", because the script is terminated before that point.
 
+## sleep
+
+Pauses execution of the script for a certain amount, measured in milliseconds
+
+```
+sleep 300
+
+print The program paused for 300 milliseconds
+
+sleep 300 300 300
+
+print The program paused for 900 milliseconds
+```
+
+Passing strings to this instruction will return a syntax error.

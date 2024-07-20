@@ -50,9 +50,24 @@ def checkCondition(line: String): Boolean =
       val condition = elements(1) match
         case "==" => compare_str(e0, e1, true)
         case "!=" => compare_str(e0, e1, false)
+        case "contains" => compare_str_contains(e0, e1, true)
+        case "!contains" => compare_str_contains(e0, e1, false)
         case _ => compare_int(e0, e1, elements(1))
       debugMessage(s"Condition returned $condition")
       condition
+
+private def compare_str_contains(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
+  debugMessage("Comparing strings")
+  val str0 =
+    if e0.vartype == variable_type.none then e0.input
+    else e0.valueToString()
+
+  val str1 =
+    if e1.vartype == variable_type.none then e1.input
+    else e1.valueToString()
+
+  if equals then str0.contains(str1)
+  else !str0.contains(str1)
 
 private def compare_str(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
   debugMessage("Comparing strings")

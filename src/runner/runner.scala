@@ -8,7 +8,7 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def lineType(line: String, types: Vector[String] = Vector("string", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
+private def lineType(line: String, types: Vector[String] = Vector("string", "sleep", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith(line, types(i)) then types(i)
   else lineType(line, types, i+1)
@@ -81,6 +81,9 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "print" =>
           printArg(s(i))
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+        case "sleep" =>
+          runSleep(s(i))
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "loop" =>
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "if" =>
@@ -92,6 +95,18 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
             loopScript(s, ifunc, nfunc, endif+1, pointer_stack)
         case _ =>
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+
+private def sleep_increment(nums: Seq[Int], finalnum: Int = 0, i: Int = 0): Int =
+  if i >= nums.length then finalnum
+  else sleep_increment(nums, finalnum + nums(i), i+1)
+
+def runSleep(line: String) =
+  val start = findLineStart(line, 5)
+  val sleep = mkstr(line, i = start)
+  for num <- sleep do
+    if !isInt(num) then closeTofu(s"Syntax error! Sleep instruction at line\n$line\nIncludes non-numeric elements!")
+  val sleep_delay = sleep_increment(sleep.map(x => mkInt(x)))
+  Thread.sleep(sleep_delay)
 
 //for later: process function and arguments all in a vector, similar to exec
 def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =

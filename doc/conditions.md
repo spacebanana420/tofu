@@ -10,6 +10,8 @@
 * `<=` - Is equal or lesser than
 * `exists` - If a variable or value exists
 * `!exists` - If a variable or value does not exist
+* `contains` - If element A contains the text of element B inside
+* `!contains` - If element A does not contain the text of element B inside
 
 In Tofu, you can use "if" statements to split the script's outcome into multiple possibilities.
 
@@ -93,3 +95,14 @@ endif
 ```
 
 This will always return true because the example checks for a value rather than a variable.
+
+
+### Checking if a string contains a substring
+
+ou can use the keyword `contains` to check if a string contains another string inside (or equals to it), or `!contains` to check if it doesn't.
+
+```
+if abcdef contains abc
+  print It does
+endif
+```
