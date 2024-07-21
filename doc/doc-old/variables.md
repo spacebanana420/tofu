@@ -60,23 +60,3 @@ endif
 ```
 
 You can use the keywords `exists` and `!exists` to check if a variable exists or doesn't, respectively. In this example, this condition returns true if the variable of name "0" exists.
-
-
-## Arithmetic calculations for integers
-
-With the instruction `calcint`, you can perform arithmetic calculations from left to right and assign the result as a variable which you can use later. The syntax is similar to `int`, as it requires a name and value to declare a variable, but the value is the result of the performed calculations.
-
-Available operators:
-* `+`
-* `-`
-* `*`
-* `/`
-* `%`
-
-Example:
-
-```
-int a, 45
-calcint result, 3 + 5 + $a - 1
-print $result
-```

@@ -8,7 +8,7 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-private def lineType(line: String, types: Vector[String] = Vector("string", "sleep", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
+private def lineType(line: String, types: Vector[String] = Vector("string", "sleep", "calcint", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith(line, types(i)) then types(i)
   else lineType(line, types, i+1)
@@ -69,6 +69,9 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 //           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "int" =>
           setVariable_int(s(i))
+          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
+        case "calcint" =>
+          calculateInt(s(i))
           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
         case "string" =>
           setVariable_str(s(i))

@@ -6,13 +6,11 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 
 * string
 * int
-* calcint
 * print
 * goto
 * return
 * exec
 * stop
-* sleep
 
 
 ## string
@@ -64,25 +62,6 @@ print $variable2
 ```
 
 This will print "4235".
-
-## calcint
-
-Performs arithmetic calculations from left to right and assigns the result as a variable
-
-Example:
-
-```
-int a, 45
-calcint result, 3 + 5 + $a - 1
-print $result
-```
-
-Available operators:
-* `+`
-* `-`
-* `*`
-* `/`
-* `%`
 
 ## print
 
@@ -161,18 +140,3 @@ print Oregano
 ```
 This script prints "Fried tofu", but never ends up printing "Oregano", because the script is terminated before that point.
 
-## sleep
-
-Pauses execution of the script for a certain amount, measured in milliseconds
-
-```
-sleep 300
-
-print The program paused for 300 milliseconds
-
-sleep 300 300 300
-
-print The program paused for 900 milliseconds
-```
-
-Passing strings to this instruction will return a syntax error.

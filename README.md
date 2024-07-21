@@ -19,14 +19,21 @@ You can also pass CLI arguments as global variables: `tofu script.tofu var1 var2
 
 ## Documentation and getting started
 
-Tofu has a small specification and feature-set. You can begin learning how to use it in the links below. The following documentation is written for **Tofu 0.2**
+Tofu has a small specification and feature-set. You can begin learning how to use it in the links below.
+
+### Tofu v0.3 Documentation
 
 * **[Syntax and instruction set](doc/instructions.md)**
 * **[Conditions and branches](doc/conditions.md)**
 * **[Variables](doc/variables.md)**
 
-## Building from source
+### Tofu v0.2 Documentation
 
+* **[Syntax and instruction set](doc/doc-old/instructions.md)**
+* **[Conditions and branches](doc/doc-old/conditions.md)**
+* **[Variables](doc/doc-old/variables.md)**
+
+## Building from source
 
 ### Scalac
 
