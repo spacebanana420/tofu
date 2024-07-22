@@ -28,8 +28,12 @@ var int_val = Seq[Int]()
 
 // var script_args = Vector[String]()
 
+private def addLineIndicator(lines: Vector[String], n: Vector[String] = Vector(), i: Int = 0): Vector[String] =
+  if i >= lines.length then n
+  else addLineIndicator(lines, n :+ s"${i+1} ${lines(i)}", i+1)
+
 def runScript(path: String) =
-  val script = readScript(path)
+  val script = addLineIndicator(readScript(path))
 
   val i_func = getFuncIndexes(script)
   val name_func = getFuncNames(script, i_func)

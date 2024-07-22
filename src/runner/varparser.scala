@@ -8,8 +8,15 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
+// def getName_variable(line: String, i: Int, s: String = ""): String = //reuse if new version is worse
+//   if i >= line.length || line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
+//   else getName_variable(line, i+1, s + line(i))
+
 def getName_variable(line: String, i: Int, s: String = ""): String =
-  if i >= line.length || line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
+  if i >= line.length then
+    closeTofu("Syntax error! Variable declaration at line\n$line\n lacks a colon \",\" to separate the name and value of the variable to be declared!")
+    ""
+  else if line(i) == ' ' || line(i) == '\t' || line(i) == ',' then s
   else getName_variable(line, i+1, s + line(i))
 
 private def findValStart(line: String, i: Int): Int =
