@@ -29,9 +29,9 @@ Tofu has a small specification and feature-set. You can begin learning how to us
 
 ### Tofu v0.2 Documentation
 
-* **[Syntax and instruction set](doc/doc-old/instructions.md)**
-* **[Conditions and branches](doc/doc-old/conditions.md)**
-* **[Variables](doc/doc-old/variables.md)**
+* **[Syntax and instruction set](https://github.com/spacebanana420/tofu/tree/v0.2/doc/instructions.md)**
+* **[Conditions and branches](https://github.com/spacebanana420/tofu/tree/v0.2/doc/conditions.md)**
+* **[Variables](https://github.com/spacebanana420/tofu/tree/v0.2/doc/variables.md)**
 
 ## Building from source
 
