@@ -41,10 +41,14 @@ def runScript(path: String) =
   if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
   loopScript(script, i_func, name_func)
 
-private def skipFunction(s: Seq[String], i: Int): Int =
+private def skipFunction(s: Seq[String], fcount: Int = 1, i: Int): Int =
   if i >= s.length then -1 //must not happen!!!!! functions must have an "end"
-  else if startsWith_strict(s(i), "end") then i+1
-  else skipFunction(s, i+1)
+  else if fcount == 0 then i
+  else if startsWith_strict(s(i), "function") then
+    skipFunction(s, fcount+1, i+1)
+  else if startsWith_strict(s(i), "end") then
+    skipFunction(s, fcount-1, i+1)
+  else skipFunction(s, fcount, i+1)
 
 private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector(), i: Int = 0): Vector[Int] =
   if i >= stack.length-1 then newstack
@@ -61,7 +65,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
       if linetype == "stop" then closeTofu()
       else linetype match
         case "function" =>
-          val afterfunc = skipFunction(s, i+1)
+          val afterfunc = skipFunction(s, i = i+1)
           debugMessage(s"Skipping function at ${s(i)}")
           loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
 //         case "set" =>
