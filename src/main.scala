@@ -7,14 +7,19 @@ var debug_mode: Boolean = false
 private val interpreter_version = "Tofu version 0.3"
 
 @main def main(args: String*) =
-  val argv = args.toVector
-  readArgs(argv)
+  val scripts = parseCLI(args.toVector)
+  for s <- scripts do runScript(s)
+
+private def parseCLI(argv: Vector[String]): Vector[String] =
+  val hasArgs = readArgs(argv)
   val scripts = argv.filter(x => isScript(x))
   val script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
   addGlobalVariables(script_args)
   debug_printSeq("The following CLI args have been passed to the script", script_args)
   debug_printSeq("Startup variables:", var_name)
-  for s <- scripts do runScript(s)
+  if scripts.length == 0 && !hasArgs then printHelp()
+  scripts
+
 
 private def addGlobalVariables(vars: Vector[String], i: Int = 0): Unit =
   if i < vars.length then
@@ -24,10 +29,15 @@ private def addGlobalVariables(vars: Vector[String], i: Int = 0): Unit =
     var_pointer = var_pointer :+ string_val.length-1
     addGlobalVariables(vars, i+1)
 
-private def readArgs(args: Seq[String]) =
-  if args.contains("--debug") then debug_mode = true
-  if args.contains("--version") then printVersion()
-  if args.contains("--help") then printHelp()
+private def readArgs(args: Seq[String]): Boolean =
+  val d = args.contains("--debug")
+  val v = args.contains("--version")
+  val h = args.contains("--help")
+
+  if d then debug_mode = true
+  if v then printVersion()
+  if h then printHelp()
+  v || h
 
 private def isScript(arg: String): Boolean =
   val f_arg = File(arg)

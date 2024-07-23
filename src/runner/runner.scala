@@ -30,15 +30,15 @@ var int_val = Seq[Int]()
 
 private def addLineIndicator(lines: Vector[String], n: Vector[String] = Vector(), i: Int = 0): Vector[String] =
   if i >= lines.length then n
-  else addLineIndicator(lines, n :+ s"${i+1} ${lines(i)}", i+1)
+  else addLineIndicator(lines, n :+ s"[${i+1}] ${lines(i)}", i+1)
 
 def runScript(path: String) =
-  val script = addLineIndicator(readScript(path))
+  val script = readScript(path)
 
   val i_func = getFuncIndexes(script)
   val name_func = getFuncNames(script, i_func)
 
-  debug_printSeq("Script in memory:", script)
+  debug_printSeq("Script in memory:", addLineIndicator(script))
   debug_printSeq("Function names:", name_func)
 
   if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
