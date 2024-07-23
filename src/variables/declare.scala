@@ -31,13 +31,13 @@ def declareInt(name: String, value: Int) =
 def replaceString(name: String, value: String) =
   val index = findInList(name, var_name)
   if index != -1 then
-    string_val(index) = value
+    string_val(var_pointer(index)) = value
 
-def replaceString(i: Int, value: String) = string_val(i) = value
+def replaceString(i: Int, value: String) = string_val(var_pointer(i)) = value
 
 def replaceInt(name: String, value: Int) =
   val index = findInList(name, var_name)
   if index != -1 then
-    int_val(index) = value
+    int_val(var_pointer(index)) = value
 
-def replaceInt(i: Int, value: Int) = int_val(i) = value
+def replaceInt(i: Int, value: Int) = int_val(var_pointer(i)) = value
