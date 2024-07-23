@@ -26,11 +26,14 @@ endif
 
 The variable is declared as an `int`, and so you can pass number values to it rather than text.
 
+## Changing the value of a variable
+
 To change the value of a variable, you can re-declare it:
 
 ```
 int a, 35
 print $a
+
 int a, 45
 print $a
 ```
