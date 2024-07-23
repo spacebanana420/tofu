@@ -68,7 +68,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
       debugMessage(s"Found the end or return of a function, returning to $new_i")
       loopScript(s, ifunc, nfunc, new_i, removeLastPointer(pointer_stack))
     else
-      debugMessage(s"Line $i+1")
+      debugMessage(s"Line ${i+1}")
       val linetype = lineType(s(i))
       if linetype == "stop" then closeTofu()
       else linetype match
