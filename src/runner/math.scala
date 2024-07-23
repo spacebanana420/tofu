@@ -61,10 +61,7 @@ def calculateInt(line: String) =
   val mathstr = getMathStr(line, start)
 
   val result = calculate(mkstr(mathstr), line)
-  var_name = var_name :+ name
-  var_type = var_type :+ variable_type.integer
-  int_val = int_val :+ result
-  var_pointer = var_pointer :+ int_val.length-1
+  declareInt(name, result)
 
 private def math_mkInt(num: String): Int =
   if isInt(num) then num.toInt
