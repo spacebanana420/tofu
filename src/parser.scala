@@ -12,8 +12,8 @@ def startsWith(line: String, keyword: String, tmp: String = "", i: Int = 0): Boo
 def startsWith_strict(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
   if i >= line.length then
     tmp == keyword
-  else if keyword.length == tmp.length then
-    tmp == keyword && (line(i) == ' ' || line(i) == '\t')
+  else if keyword == tmp && (line(i) == ' ' || line(i) == '\t') then
+    true
   else startsWith_strict(line, keyword, tmp + line(i), i+1)
 
 // def exactMatch(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
@@ -44,16 +44,24 @@ def getFuncNames(script: Seq[String], indexes: Seq[Int], names: Vector[String] =
     val name = getName(line, name_start)
     getFuncNames(script, indexes, names :+ name, i+1)
 
-private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, strict: Boolean, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
-  if i >= script.length then
-    if strict then start_count == end_count else start_count <= end_count
-  else
-    val more_start = if startsWith(script(i), start_keyword) then 1 else 0
-    val more_end = if startsWith(script(i), end_keyword) then 1 else 0
-    verifyCode(script, start_keyword, end_keyword, strict, start_count + more_start, end_count + more_end, i+1)
+// private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, strict: Boolean, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
+//   if i >= script.length then
+//     if strict then start_count == end_count else start_count <= end_count
+//   else
+//     val more_start = if startsWith(script(i), start_keyword) then 1 else 0
+//     val more_end = if startsWith(script(i), end_keyword) then 1 else 0
+//     verifyCode(script, start_keyword, end_keyword, strict, start_count + more_start, end_count + more_end, i+1)
 
-def verifyFunctions(script: Seq[String]): Boolean = verifyCode(script, "function", "end", false)
-def verifyIfs(script: Seq[String]): Boolean = verifyCode(script, "if", "endif", true)
+//use older version of this function if this one is worse
+private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
+  if i >= script.length then start_count == end_count
+  else
+    val more_start = if startsWith_strict(script(i), start_keyword) then 1 else 0
+    val more_end = if startsWith_strict(script(i), end_keyword) then 1 else 0
+    verifyCode(script, start_keyword, end_keyword, start_count + more_start, end_count + more_end, i+1)
+
+def verifyFunctions(script: Seq[String]): Boolean = verifyCode(script, "function", "end")
+def verifyIfs(script: Seq[String]): Boolean = verifyCode(script, "if", "endif")
 
 def mkstr_raw(in: Seq[String], str: String = "", i: Int = 0): String =
   if i >= in.length then str

@@ -46,8 +46,11 @@ def runScript(path: String) =
   loopScript(script, i_func, name_func)
 
 private def skipFunction(s: Seq[String], fcount: Int = 1, i: Int): Int =
-  if i >= s.length then -1 //must not happen!!!!! functions must have an "end"
-  else if fcount == 0 then i
+  if i >= s.length then
+    if fcount == 0 then i else -1 //-1 must not happen!!!!! functions must have an "end"
+  else if fcount == 0 then
+    debugMessage(s"Found the end of the function block at ${i-1}")
+    i
   else if startsWith_strict(s(i), "function") then
     skipFunction(s, fcount+1, i+1)
   else if startsWith_strict(s(i), "end") then
@@ -70,7 +73,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
       else linetype match
         case "function" =>
           val afterfunc = skipFunction(s, i = i+1)
-          debugMessage(s"Skipping function at ${s(i)}")
+          debugMessage(s"Skipping function at ${s(i)} (line $i)")
           loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
 //         case "set" =>
 //           setVariable_str(s(i))
