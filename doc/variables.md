@@ -42,7 +42,9 @@ This code will print "35" and then "45"
 
 ## Passing CLI arguments to variables
 
-On Tofu, you can pass CLI arguments as global variables of type `string`. Any command-line argument that does not start with the character `-` and is not a path that leads to a readable file will be passed as a global variable to the script.
+On Tofu, you can pass CLI arguments as global variables. Any command-line argument that does not start with the character `-` and is not a path that leads to a readable file will be passed as a global variable to the script.
+
+If you pass numeric values, they will be declared as integer variables, otherwise they will become strings.
 
 Let's assume you have a script named `script.tofu` and you want to run it and pass "linguine" as a variable right when launching the script, you can do so by running the command:
 

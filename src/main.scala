@@ -23,10 +23,8 @@ private def parseCLI(argv: Vector[String]): Vector[String] =
 
 private def addGlobalVariables(vars: Vector[String], i: Int = 0): Unit =
   if i < vars.length then
-    var_name = var_name :+ i.toString()
-    var_type = var_type :+ variable_type.string
-    string_val = string_val :+ vars(i)
-    var_pointer = var_pointer :+ string_val.length-1
+    if isInt(vars(i)) then declareInt(i.toString(), mkInt(vars(i)))
+    else declareString(i.toString(), vars(i))
     addGlobalVariables(vars, i+1)
 
 private def readArgs(args: Seq[String]): Boolean =
