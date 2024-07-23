@@ -47,8 +47,8 @@ private def getVariableProperties(line: String, keyword: String): Vector[String]
     closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a name!")
   if value.length == 0 then
     closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a value!")
-  if var_name.contains(name) then
-    closeTofu(s"Variable declaration error at line: \n$line\n\nVariable of name $name already exists!")
+//   if var_name.contains(name) then
+//     closeTofu(s"Variable declaration error at line: \n$line\n\nVariable of name $name already exists!")
   Vector(name, value)
 
 // def setVariable(line: String) =
@@ -64,10 +64,7 @@ def setVariable_str(line: String) =
   val name = variable(0); val value = variable(1)
 
   debugMessage(s"Assigning new variable of name $name and value $value")
-  var_name = var_name :+ name
-  var_type = var_type :+ variable_type.string
-  string_val = string_val :+ value
-  var_pointer = var_pointer :+ string_val.length-1
+  declareString(name, value)
 
 def setVariable_int(line: String) =
   val variable = getVariableProperties(line, "int")
@@ -76,10 +73,7 @@ def setVariable_int(line: String) =
 
   if value_num == -1 && value != "-1" then closeTofu(s"Syntax error! Assigning a string value on an integer variable declaration at line\n$line\nIs not possible!")
   debugMessage(s"Assigning new variable of name $name and value $value")
-  var_name = var_name :+ name
-  var_type = var_type :+ variable_type.integer
-  int_val = int_val :+ value_num
-  var_pointer = var_pointer :+ int_val.length-1
+  declareInt(name, value_num)
 
 def isInt(value: String, i: Int = 0): Boolean =
   val digits = Vector('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')

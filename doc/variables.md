@@ -26,6 +26,17 @@ endif
 
 The variable is declared as an `int`, and so you can pass number values to it rather than text.
 
+To change the value of a variable, you can re-declare it:
+
+```
+int a, 35
+print $a
+int a, 45
+print $a
+```
+
+This code will print "35" and then "45"
+
 ## Passing CLI arguments to variables
 
 On Tofu, you can pass CLI arguments as global variables of type `string`. Any command-line argument that does not start with the character `-` and is not a path that leads to a readable file will be passed as a global variable to the script.

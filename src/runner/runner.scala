@@ -22,9 +22,9 @@ var var_name = Vector[String]()
 var var_type = Vector[variable_type]()
 var var_pointer = Vector[Int]()
 
-var var_val = Seq[String]()
-var string_val = Seq[String]()
-var int_val = Seq[Int]()
+// var var_val = Array[String]()
+var string_val = Array[String]()
+var int_val = Array[Int]()
 
 // var script_args = Vector[String]()
 
