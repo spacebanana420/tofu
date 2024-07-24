@@ -2,7 +2,7 @@ package tofu.parser
 
 import tofu.reader.findLineStart
 import tofu.variables.{readVariable_str_safe, readVariable_int_safe}
-import tofu.debug_printSeq
+import tofu.{debugMessage, debug_printSeq}
 
 def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   if i >= list.length then -1
@@ -76,3 +76,13 @@ def parseString(line: String, start: Int): String =
   val str = mkstr(line, i = start).map(x => readVariable_str_safe(x))
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
+
+def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
+  if i >= s.length then
+    if count == 0 then i else -1 //-1 must not happen!!!!!
+  else if count == 0 then i
+  else if startsWith_strict(s(i), startk) then
+    findBlockEnd(s, startk, endk, i+1, count+1)
+  else if startsWith_strict(s(i), endk) then
+    findBlockEnd(s, startk, endk, i+1, count-1)
+  else findBlockEnd(s, startk, endk, i+1, count)

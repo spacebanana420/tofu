@@ -9,16 +9,19 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-def findEndIF(script: Seq[String], i: Int): Int =
-  if i >= script.length then -1
-  else if startsWith(script(i), "endif") then i
-  else findEndIF(script, i+1)
+// def findEndIF(script: Seq[String], i: Int): Int =
+//   if i >= script.length then -1
+//   else if startsWith(script(i), "endif") then i
+//   else findEndIF(script, i+1)
+//
+// def findEndWhile(script: Seq[String], i: Int): Int =
+//   if i >= script.length then -1
+//   else if startsWith(script(i), "endwhile") then i
+//   else findEndWhile(script, i+1)
 
-def findEndWhile(script: Seq[String], i: Int): Int =
-  if i >= script.length then -1
-  else if startsWith(script(i), "endwhile") then i
-  else findEndWhile(script, i+1)
+def findEndIF(script: Seq[String], i: Int): Int = findBlockEnd(script, "if", "endif", i+1, 1)
 
+def findEndWhile(script: Seq[String], i: Int): Int = findBlockEnd(script, "while", "endwhile", i+1, 1)
 
 def checkCondition(line: String, isIF: Boolean): Boolean =
   val start = if isIF then findLineStart(line, 2) else findLineStart(line, 5) //for while loops

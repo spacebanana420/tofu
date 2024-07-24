@@ -11,7 +11,6 @@ import tofu.closeTofu
 var var_name = Vector[String]()
 var var_type = Vector[variable_type]()
 var var_pointer = Vector[Int]()
-
 var string_val = Array[String]()
 var int_val = Array[Int]()
 
@@ -36,11 +35,12 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
   if i < s.length then
     if while_stack.length > 0 && startsWith_strict(s(i), "endwhile") then
       val new_i = while_stack(while_stack.length-1)
-      debugMessage(s"While block ended, returning to line ${new_i+1}")
+      while_stack = removeLastPointer(while_stack)
+      debugMessage(s"While block ended, returning to line $new_i")
       loopScript(s, ifunc, nfunc, new_i)
     else if function_stack.length > 0 && (startsWith_strict(s(i), "end") || startsWith(s(i), "return")) then
       val new_i = function_stack(function_stack.length-1)
-      debugMessage(s"Found the end or return of a function, returning to line ${new_i+1}")
+      //debugMessage(s"Found the end or return of a function, returning to line $new_i")
       function_stack = removeLastPointer(function_stack)
       loopScript(s, ifunc, nfunc, new_i)
     else
@@ -48,8 +48,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
       if linetype == "stop" then closeTofu()
       else linetype match
         case "function" =>
-          val afterfunc = skipFunction(s, i = i+1)
-          debugMessage(s"Skipping function at ${s(i)} (line $i)")
+          val afterfunc = skipFunction(s, i)
+          debugMessage(s"Found function at line $i, found end of the block at line $afterfunc")
           loopScript(s, ifunc, nfunc, afterfunc)
         case "int" =>
           setVariable_int(s(i))
@@ -75,19 +75,20 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "while" =>
           val condition = checkCondition(s(i), false)
           val end = findEndWhile(s, i)
+          debugMessage(s"Found while at line $i, found end of the block at line $end")
           if condition then
-            if !while_stack.contains(i) then while_stack = while_stack :+ i
+            while_stack = while_stack :+ i
             loopScript(s, ifunc, nfunc, i+1)
           else
-            if while_stack.length > 0 then removeLastPointer(while_stack)
-            loopScript(s, ifunc, nfunc, end+1)
+            loopScript(s, ifunc, nfunc, end)
         case "if" =>
           val condition = checkCondition(s(i), true)
           val endif = findEndIF(s, i)
+          debugMessage(s"Found if statement at line $i, found end of the block at line $endif")
           if condition then
             loopScript(s, ifunc, nfunc, i+1)
           else
-            loopScript(s, ifunc, nfunc, endif+1)
+            loopScript(s, ifunc, nfunc, endif)
         case _ =>
           loopScript(s, ifunc, nfunc, i+1)
 
@@ -102,19 +103,9 @@ i: Int = 0): String =
 
 private def addLineIndicator(lines: Vector[String], n: Vector[String] = Vector(), i: Int = 0): Vector[String] =
   if i >= lines.length then n
-  else addLineIndicator(lines, n :+ s"[${i+1}] ${lines(i)}", i+1)
+  else addLineIndicator(lines, n :+ s"[$i] ${lines(i)}", i+1)
 
-private def skipFunction(s: Seq[String], fcount: Int = 1, i: Int): Int =
-  if i >= s.length then
-    if fcount == 0 then i else -1 //-1 must not happen!!!!! functions must have an "end"
-  else if fcount == 0 then
-    debugMessage(s"Found the end of the function block at ${i-1}")
-    i
-  else if startsWith_strict(s(i), "function") then
-    skipFunction(s, fcount+1, i+1)
-  else if startsWith_strict(s(i), "end") then
-    skipFunction(s, fcount-1, i+1)
-  else skipFunction(s, fcount, i+1)
+private def skipFunction(s: Seq[String], i: Int): Int = findBlockEnd(s, "function", "end", i+1, 1)
 
 private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector(), i: Int = 0): Vector[Int] =
   if i >= stack.length-1 then newstack

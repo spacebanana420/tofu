@@ -1,6 +1,16 @@
 int i, 0
 
-while $i < 10
+function test
+  if 2 > 3
+    print $a
+  endif
+  print $b
+end
+
+goto test
+print $c
+
+while $i < 3
   print I: $i
   calcint i, $i + 1
 
