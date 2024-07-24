@@ -1,5 +1,7 @@
 # Tofu conditions and branching
 
+Tofu can do branching with condition instructions, such as if statements and while loops.
+
 ### Available operators
 
 * `==` - Equals to
@@ -12,6 +14,8 @@
 * `!exists` - If a variable or value does not exist
 * `contains` - If element A contains the text of element B inside
 * `!contains` - If element A does not contain the text of element B inside
+
+## If statements
 
 In Tofu, you can use "if" statements to split the script's outcome into multiple possibilities.
 
@@ -106,3 +110,19 @@ if abcdef contains abc
   print It does
 endif
 ```
+
+## While loops
+
+On Tofu, you can define the start and end of a while loop block with the keywords `while` and `endwhile`. A while loop runs a block of code until a condition is no longer met:
+
+```
+int num, 0
+
+while num < 10
+  print $num
+  calcint num, $num + 1
+endwhile
+print It's done!
+```
+
+In this piece of code, the variable `num` will be printed and then incremented by one until its value reaches 10.

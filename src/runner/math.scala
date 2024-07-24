@@ -23,7 +23,9 @@ def calc_operator(e0: Int, e1: Int, o: String): Int =
     case "/" =>
       if e1 == 0 then closeTofu("Division error! You cannot divide a variable by 0!")
       e0 / e1
-    case "%" => e0 % e1
+    case "%" =>
+      if e1 == 0 then closeTofu("Division error! You cannot divide a variable by 0!")
+      e0 % e1
     case _ => 0
 
 private def calculate_class(e0: TofuVar, e1: TofuVar, o: TofuVar): Int =

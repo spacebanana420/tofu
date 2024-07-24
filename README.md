@@ -21,7 +21,7 @@ You can also pass CLI arguments as global variables: `tofu script.tofu var1 var2
 
 Tofu has a small specification and feature-set. You can begin learning how to use it in the links below.
 
-### Tofu v0.3 Documentation
+### Tofu v0.4 Documentation
 
 * **[Syntax and instruction set](doc/instructions.md)**
 * **[Conditions and branches](doc/conditions.md)**
@@ -29,9 +29,9 @@ Tofu has a small specification and feature-set. You can begin learning how to us
 
 ### Tofu v0.2 Documentation
 
-* **[Syntax and instruction set](https://github.com/spacebanana420/tofu/tree/v0.2/doc/instructions.md)**
-* **[Conditions and branches](https://github.com/spacebanana420/tofu/tree/v0.2/doc/conditions.md)**
-* **[Variables](https://github.com/spacebanana420/tofu/tree/v0.2/doc/variables.md)**
+* **[Syntax and instruction set](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/instructions.md)**
+* **[Conditions and branches](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/conditions.md)**
+* **[Variables](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/variables.md)**
 
 ## Building from source
 

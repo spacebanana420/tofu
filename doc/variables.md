@@ -96,3 +96,5 @@ int a, 45
 calcint result, 3 + 5 + $a - 1
 print $result
 ```
+
+Note that you cannot use the operators `/` and `%` if you are dividing a number by 0.
