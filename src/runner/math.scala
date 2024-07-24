@@ -7,22 +7,24 @@ import tofu.reader.findLineStart
 
 import scala.sys.process.*
 
-def calc_operator(e0: Int, e1: Int, o: String): Int =
-  debugMessage(s"Calculating: $e0 $o $e1")
-  o match
-    case "+" => e0 + e1
-    case "-" => e0 - e1
-    case "*" => e0 * e1
-    case "/" => e0 / e1
-    case "%" => e0 % e1
-    case _ => 0
-
 def calculate(strs: Seq[String], line: String): Int =
   debug_printSeq(s"Math string elements (length ${strs.length}):", strs)
   if strs.length < 3 then closeTofu(s"Operator error! Calculation in line\n$line\nRequires at least 2 elements and 1 operator!")
   if strs.length % 2 != 1 then closeTofu(s"Operator error! Calculation in line\n$line\nIs missing an element or operator")
   val classes = strs.map(x => readVariable_class_safe(x))
   calculateSeq(classes)
+
+def calc_operator(e0: Int, e1: Int, o: String): Int =
+  debugMessage(s"Calculating: $e0 $o $e1")
+  o match
+    case "+" => e0 + e1
+    case "-" => e0 - e1
+    case "*" => e0 * e1
+    case "/" =>
+      if e1 == 0 then closeTofu("Division error! You cannot divide a variable by 0!")
+      e0 / e1
+    case "%" => e0 % e1
+    case _ => 0
 
 private def calculate_class(e0: TofuVar, e1: TofuVar, o: TofuVar): Int =
   val operator = o.input
