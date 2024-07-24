@@ -142,3 +142,6 @@ def runStartupChecks(script: Seq[String]) =
   if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
   if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
   if !verifyWhile(script) then closeTofu("Syntax error! All while loops must be followed by the \"endwhile\" keyword to define where they end!")
+
+  verifyConditions(script)
+  verifyWhileCondition(script)

@@ -27,9 +27,6 @@ def checkCondition(line: String, isIF: Boolean): Boolean =
   val start = if isIF then findLineStart(line, 2) else findLineStart(line, 5) //for while loops
   val elements = conditionElements(line, start)
   elements.length match
-    case 0 =>
-      closeTofu(s"Syntax error! Condition at line\n$line\nlacks elements and an operator to compare them to!")
-      false
     case 1 =>
       debugMessage("If statement has only 1 element, returning true if variable exists or is not a variable")
       val variable = readVariable_class_safe(elements(0))
@@ -53,10 +50,7 @@ def checkCondition(line: String, isIF: Boolean): Boolean =
       debugMessage(s"Condition returned $condition")
       condition
 
-private def addElement(x: Vector[String], y: String): Vector[String] =
-  if y.length == 0 then x else x:+y
-
-private def conditionElements(line: String, i: Int, elements: Vector[String] = Vector(), s: String = "", ignore_spaces: Boolean = false): Vector[String] =
+def conditionElements(line: String, i: Int, elements: Vector[String] = Vector(), s: String = "", ignore_spaces: Boolean = false): Vector[String] =
   if i >= line.length || elements.length == 3 then addElement(elements, s)
   else if line(i) == ' ' || line(i) == '\t' && !ignore_spaces then
     conditionElements(line, i+1, elements :+ s, "", ignore_spaces)
@@ -64,6 +58,9 @@ private def conditionElements(line: String, i: Int, elements: Vector[String] = V
     conditionElements(line, i+1, elements, s, !ignore_spaces)
   else
     conditionElements(line, i+1, elements, s + line(i), ignore_spaces)
+
+private def addElement(x: Vector[String], y: String): Vector[String] =
+  if y.length == 0 then x else x:+y
 
 private def compare_str_contains(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
   val str0 =

@@ -42,17 +42,6 @@ def getFuncNames(script: Seq[String], indexes: Seq[Int], names: Vector[String] =
     val name = getName(line, name_start)
     getFuncNames(script, indexes, names :+ name, i+1)
 
-private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
-  if i >= script.length then start_count == end_count
-  else
-    val more_start = if startsWith_strict(script(i), start_keyword) then 1 else 0
-    val more_end = if startsWith_strict(script(i), end_keyword) then 1 else 0
-    verifyCode(script, start_keyword, end_keyword, start_count + more_start, end_count + more_end, i+1)
-
-def verifyFunctions(script: Seq[String]): Boolean = verifyCode(script, "function", "end")
-def verifyIfs(script: Seq[String]): Boolean = verifyCode(script, "if", "endif")
-def verifyWhile(script: Seq[String]): Boolean = verifyCode(script, "while", "endwhile")
-
 def mkstr_raw(in: Seq[String], str: String = "", i: Int = 0): String =
   if i >= in.length then str
   else if i == in.length-1 then mkstr_raw(in, str + s"${in(i)}", i+1)

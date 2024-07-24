@@ -40,7 +40,7 @@ class TofuVar(name: String):
   private def getValue_int(): Int = int_val(pointer)
 end TofuVar
 
-private def getVariableProperties(line: String, keyword: String): Vector[String] =
+def getVariableProperties(line: String, keyword: String): Vector[String] =
   val start = findLineStart(line, keyword.length)
   val name = getName_variable(line, start)
   val value = findVariableVal(line, start)
