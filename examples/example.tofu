@@ -18,7 +18,7 @@ exec ffplay -loglevel 0 "/home/space/Pictures/Kirby Shook_square20x.png"
 print $doremy
 print $doremy2
 
-goto encode
+call encode
 
 if 3 == 3
   print It's true

@@ -7,7 +7,7 @@ function test
   print $b
 end
 
-goto test
+call test
 print $c
 
 while $i < 3

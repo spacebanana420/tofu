@@ -19,9 +19,9 @@ function build-java
 end
 
 function fullbuild
-  goto build-scala
-  goto build-java
-  goto build-bootstrap
+  call build-scala
+  call build-java
+  call build-bootstrap
 
   print Building native binary (Linux x86_64) (GraalVM)
   exec native-image --no-fallback --static -O3 -jar build/tofu-java.jar -o build/tofu
@@ -44,29 +44,29 @@ if $0 == help
 endif
 
 if $0 == scala
-  goto build-scala
+  call build-scala
   stop
 endif
 
 if $0 == light
-  goto build-scalacli
+  call build-scalacli
   stop
 endif
 
 if $0 == full
-  goto fullbuild
+  call fullbuild
   stop
 endif
 
 if $0 == java
-  goto build-java
+  call build-java
   stop
 endif
 
 if $0 == bootstrap
-  goto build-bootstrap
+  call build-bootstrap
   stop
 endif
 
-goto build-scala
-goto build-java
+call build-scala
+call build-java
