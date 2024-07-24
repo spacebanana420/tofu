@@ -8,12 +8,12 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * int
 * calcint
 * print
-* goto
+* call
 * return
 * exec
 * stop
 * sleep
-
+* break
 
 ## string
 
@@ -97,9 +97,9 @@ print I really love $food
 ```
 This will print "I really love tofu"
 
-## goto
+## call
 
-`goto` executes a function if it exists. It follows the syntax `goto NAME`.
+`call` executes a function if it exists. It follows the syntax `call NAME`.
 
 Example:
 
@@ -108,7 +108,7 @@ function printstuff
   print Fried tofu is yummy
 end
 
-goto printstuff
+call printstuff
 ```
 This script executes the function "printstuff", and as a result it prints "Fried tofu is yummy".
 
@@ -125,7 +125,7 @@ function printstuff
   print Baguette
 end
 
-goto printstuff
+call printstuff
 ```
 
 "Baguette" is never printed, because the line before returns the function, closing it earlier
@@ -176,3 +176,17 @@ print The program paused for 900 milliseconds
 ```
 
 Passing strings to this instruction will return a syntax error.
+
+## break
+
+Interrupts a loop execution:
+
+```
+int c, 0
+while $c < 3
+  print C: $c
+  calcint c, $c + 1
+  break
+endwhile
+```
+Only one instance of this loop runs because the keyword `break` cancels futher executions, including any lines inside the loop block that are below it.

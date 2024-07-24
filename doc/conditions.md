@@ -126,3 +126,16 @@ print It's done!
 ```
 
 In this piece of code, the variable `num` will be printed and then incremented by one until its value reaches 10.
+
+You can interrupt and cancel a loop execution with the keyword `break`:
+
+```
+int c, 0
+while $c < 3
+  print C: $c
+  calcint c, $c + 1
+  break
+endwhile
+```
+
+Only one instance of this loop runs because the keyword `break` cancels futher executions, including any lines inside the loop block that are below it.

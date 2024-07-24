@@ -49,6 +49,12 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           val afterfunc = skipFunction(s, i)
           debugMessage(s"Found function at line $i, found end of the block at line $afterfunc")
           loopScript(s, ifunc, nfunc, afterfunc)
+        case "break" =>
+          if while_stack.length > 0 then
+            while_stack = removeLastPointer(while_stack)
+            val end = findEndWhile(s, i)
+            debugMessage(s"Found break, cancelling loop execution, moving to line $end")
+            loopScript(s, ifunc, nfunc, end)
         case "int" =>
           setVariable_int(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -61,7 +67,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
-        case "goto" =>
+        case "call" =>
           function_stack = function_stack :+ (i+1)
           loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc))
         case "print" =>
@@ -93,7 +99,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "while", "sleep", "calcint", "int",
-"print", "if", "function", "exec", "goto", "stop"),
+"print", "if", "function", "exec", "call", "break", "stop"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)
