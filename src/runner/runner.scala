@@ -26,9 +26,7 @@ def runScript(path: String) =
   debug_printSeq("Script in memory:", addLineIndicator(script))
   debug_printSeq("Function names:", name_func)
 
-  if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
-  if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
-  if !verifyWhile(script) then closeTofu("Syntax error! All while loops must be followed by the \"endwhile\" keyword to define where they end!")
+  runStartupChecks(script)
   loopScript(script, i_func, name_func)
 
 private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0): Unit =
@@ -133,3 +131,8 @@ def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
     closeTofu(s"Syntax error! Function of name '$name' at line:\n$line\nDoes not exist!")
   debugMessage(s"Calling function '$name', moved to line ${fi(i)+1}")
   fi(i)+1
+
+def runStartupChecks(script: Seq[String]) =
+  if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
+  if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
+  if !verifyWhile(script) then closeTofu("Syntax error! All while loops must be followed by the \"endwhile\" keyword to define where they end!")
