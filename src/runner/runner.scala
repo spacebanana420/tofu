@@ -1,36 +1,22 @@
 package tofu.runner
 
 import tofu.{debugMessage, debug_printSeq}
+import tofu.variables.*
 import tofu.parser.*
 import tofu.reader.findLineStart
 
-import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
-
-private def lineType(line: String, types: Vector[String] = Vector("string", "sleep", "calcint", "int", "print", "if", "function", "exec", "goto", "stop", "loop"),  i: Int = 0): String =
-  if i >= types.length then "none"
-  else if startsWith(line, types(i)) then types(i)
-  else lineType(line, types, i+1)
-
-private def findInList(find: String, list: Seq[String], i: Int = 0): Int =
-  if i >= list.length then -1
-  else if find == list(i) then i
-  else findInList(find, list, i+1)
 
 var var_name = Vector[String]()
 var var_type = Vector[variable_type]()
 var var_pointer = Vector[Int]()
 
-// var var_val = Array[String]()
 var string_val = Array[String]()
 var int_val = Array[Int]()
 
-// var script_args = Vector[String]()
-
-private def addLineIndicator(lines: Vector[String], n: Vector[String] = Vector(), i: Int = 0): Vector[String] =
-  if i >= lines.length then n
-  else addLineIndicator(lines, n :+ s"[${i+1}] ${lines(i)}", i+1)
+var function_stack = Vector[Int]()
+var while_stack = Vector[Int]()
 
 def runScript(path: String) =
   val script = readScript(path)
@@ -43,7 +29,80 @@ def runScript(path: String) =
 
   if !verifyFunctions(script) then closeTofu("Syntax error! All functions must be followed by the \"end\" keyword to define where they end!")
   if !verifyIfs(script) then closeTofu("Syntax error! All if statements must be followed by the \"endif\" keyword to define where they end!")
+  if !verifyWhile(script) then closeTofu("Syntax error! All while loops must be followed by the \"endwhile\" keyword to define where they end!")
   loopScript(script, i_func, name_func)
+
+private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0): Unit =
+  if i < s.length then
+    if while_stack.length > 0 && startsWith_strict(s(i), "endwhile") then
+      val new_i = while_stack(while_stack.length-1)
+      debugMessage(s"While block ended, returning to line ${new_i+1}")
+      loopScript(s, ifunc, nfunc, new_i)
+    else if function_stack.length > 0 && (startsWith_strict(s(i), "end") || startsWith(s(i), "return")) then
+      val new_i = function_stack(function_stack.length-1)
+      debugMessage(s"Found the end or return of a function, returning to line ${new_i+1}")
+      function_stack = removeLastPointer(function_stack)
+      loopScript(s, ifunc, nfunc, new_i)
+    else
+      val linetype = lineType(s(i))
+      if linetype == "stop" then closeTofu()
+      else linetype match
+        case "function" =>
+          val afterfunc = skipFunction(s, i = i+1)
+          debugMessage(s"Skipping function at ${s(i)} (line $i)")
+          loopScript(s, ifunc, nfunc, afterfunc)
+        case "int" =>
+          setVariable_int(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "calcint" =>
+          calculateInt(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "string" =>
+          setVariable_str(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "exec" =>
+          exec(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "goto" =>
+          function_stack = function_stack :+ (i+1)
+          loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc))
+        case "print" =>
+          printArg(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "sleep" =>
+          runSleep(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "while" =>
+          val condition = checkCondition(s(i), false)
+          val end = findEndWhile(s, i)
+          if condition then
+            if !while_stack.contains(i) then while_stack = while_stack :+ i
+            loopScript(s, ifunc, nfunc, i+1)
+          else
+            if while_stack.length > 0 then removeLastPointer(while_stack)
+            loopScript(s, ifunc, nfunc, end+1)
+        case "if" =>
+          val condition = checkCondition(s(i), true)
+          val endif = findEndIF(s, i)
+          if condition then
+            loopScript(s, ifunc, nfunc, i+1)
+          else
+            loopScript(s, ifunc, nfunc, endif+1)
+        case _ =>
+          loopScript(s, ifunc, nfunc, i+1)
+
+private def lineType(line: String, types: Vector[String] =
+Vector(
+"string", "while", "sleep", "calcint", "int",
+"print", "if", "function", "exec", "goto", "stop"),
+i: Int = 0): String =
+  if i >= types.length then "none"
+  else if startsWith_strict(line, types(i)) then types(i)
+  else lineType(line, types, i+1)
+
+private def addLineIndicator(lines: Vector[String], n: Vector[String] = Vector(), i: Int = 0): Vector[String] =
+  if i >= lines.length then n
+  else addLineIndicator(lines, n :+ s"[${i+1}] ${lines(i)}", i+1)
 
 private def skipFunction(s: Seq[String], fcount: Int = 1, i: Int): Int =
   if i >= s.length then
@@ -60,56 +119,6 @@ private def skipFunction(s: Seq[String], fcount: Int = 1, i: Int): Int =
 private def removeLastPointer(stack: Vector[Int], newstack: Vector[Int] = Vector(), i: Int = 0): Vector[Int] =
   if i >= stack.length-1 then newstack
   else removeLastPointer(stack, newstack :+ stack(i), i+1)
-
-private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: Int = 0, pointer_stack: Vector[Int] = Vector()): Unit =
-  if i < s.length then
-    if pointer_stack.length > 0 && (startsWith_strict(s(i), "end") || startsWith(s(i), "return")) then
-      val new_i = pointer_stack(pointer_stack.length-1)
-      debugMessage(s"Found the end or return of a function, returning to $new_i")
-      loopScript(s, ifunc, nfunc, new_i, removeLastPointer(pointer_stack))
-    else
-      //debugMessage(s"Line ${i+1}")
-      val linetype = lineType(s(i))
-      if linetype == "stop" then closeTofu()
-      else linetype match
-        case "function" =>
-          val afterfunc = skipFunction(s, i = i+1)
-          debugMessage(s"Skipping function at ${s(i)} (line $i)")
-          loopScript(s, ifunc, nfunc, afterfunc, pointer_stack)
-//         case "set" =>
-//           setVariable_str(s(i))
-//           loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "int" =>
-          setVariable_int(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "calcint" =>
-          calculateInt(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "string" =>
-          setVariable_str(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "exec" =>
-          exec(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "goto" =>
-          loopScript(s, ifunc, nfunc, goToFunc(s(i), ifunc, nfunc), pointer_stack :+ (i+1))
-        case "print" =>
-          printArg(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "sleep" =>
-          runSleep(s(i))
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "loop" =>
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-        case "if" =>
-          val condition = checkCondition(s(i))
-          val endif = findEndIF(s, i)
-          if condition then
-            loopScript(s, ifunc, nfunc, i+1, pointer_stack)
-          else
-            loopScript(s, ifunc, nfunc, endif+1, pointer_stack)
-        case _ =>
-          loopScript(s, ifunc, nfunc, i+1, pointer_stack)
 
 private def sleep_increment(nums: Seq[Int], finalnum: Int = 0, i: Int = 0): Int =
   if i >= nums.length then finalnum
@@ -133,28 +142,3 @@ def goToFunc(line: String, fi: Seq[Int], fn: Seq[String]): Int =
     closeTofu(s"Syntax error! Function of name '$name' at line:\n$line\nDoes not exist!")
   debugMessage(s"Calling function '$name', moved to line ${fi(i)+1}")
   fi(i)+1
-
-private def addArg(args: Vector[String], arg: String): Vector[String] =
-  args :+ readVariable_str_safe(arg)
-
-private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String = "", i: Int = 0, ignore_spaces: Boolean = false): Vector[String] =
-  if i >= line.length then
-    if arg.length == 0 then cmd
-    else addArg(cmd, arg)
-  else if line(i) == '"' then
-    mkcommand(line, cmd, arg, i+1, !ignore_spaces)
-  else if line(i) == ' ' || line(i) == '\t' then
-    if ignore_spaces then
-      mkcommand(line, cmd, arg + line(i), i+1, ignore_spaces)
-    else
-      mkcommand(line, addArg(cmd, arg), "", i+1, ignore_spaces)
-  else
-    mkcommand(line, cmd, arg + line(i), i+1, ignore_spaces)
-
-def exec(line: String) =
-  val cmd_start = findLineStart(line, 4)
-  debugMessage(s"Exec parsing started at $cmd_start")
-  val cmd = mkcommand(line, i = cmd_start)
-  if cmd.length == 0 then closeTofu(s"Syntax error! Command is empty at line:\n$line\n")
-  debug_printSeq("Running command:", cmd)
-  cmd.!<

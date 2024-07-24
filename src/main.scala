@@ -1,6 +1,6 @@
 package tofu
 
-import tofu.reader.*, tofu.parser.*, tofu.runner.*
+import tofu.reader.*, tofu.parser.*, tofu.runner.*, tofu.variables.*
 import java.io.File
 
 var debug_mode: Boolean = false

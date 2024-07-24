@@ -1,6 +1,7 @@
 package tofu.runner
 
 import tofu.{debugMessage, debug_printSeq, closeTofu}
+import tofu.variables.*
 import tofu.parser.*
 import tofu.reader.findLineStart
 
@@ -15,6 +16,13 @@ def calc_operator(e0: Int, e1: Int, o: String): Int =
     case "/" => e0 / e1
     case "%" => e0 % e1
     case _ => 0
+
+def calculate(strs: Seq[String], line: String): Int =
+  debug_printSeq(s"Math string elements (length ${strs.length}):", strs)
+  if strs.length < 3 then closeTofu(s"Operator error! Calculation in line\n$line\nRequires at least 2 elements and 1 operator!")
+  if strs.length % 2 != 1 then closeTofu(s"Operator error! Calculation in line\n$line\nIs missing an element or operator")
+  val classes = strs.map(x => readVariable_class_safe(x))
+  calculateSeq(classes)
 
 private def calculate_class(e0: TofuVar, e1: TofuVar, o: TofuVar): Int =
   val operator = o.input
@@ -41,13 +49,6 @@ private def calculateSeq(s: Seq[TofuVar], finalval: Int = 0, i: Int = 0, first: 
       calculateSeq(s, newval, i+3, false)
     else
       calculateSeq(s, newval, i+2, false)
-
-def calculate(strs: Seq[String], line: String): Int =
-  debug_printSeq(s"Math string elements (length ${strs.length}):", strs)
-  if strs.length < 3 then closeTofu(s"Operator error! Calculation in line\n$line\nRequires at least 2 elements and 1 operator!")
-  if strs.length % 2 != 1 then closeTofu(s"Operator error! Calculation in line\n$line\nIs missing an element or operator")
-  val classes = strs.map(x => readVariable_class_safe(x))
-  calculateSeq(classes)
 
 private def getMathStr(line: String, i: Int, math: String = "", copystr: Boolean = false): String =
   if i >= line.length then math

@@ -1,8 +1,9 @@
-package tofu.runner
+package tofu.variables
 
 import tofu.{debugMessage, debug_printSeq}
 import tofu.parser.*
 import tofu.reader.findLineStart
+import tofu.runner.*
 
 import scala.sys.process.*
 import tofu.reader.readScript
@@ -47,17 +48,7 @@ private def getVariableProperties(line: String, keyword: String): Vector[String]
     closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a name!")
   if value.length == 0 then
     closeTofu(s"Syntax error! The variable declaration in line\n$line\nLacks a value!")
-//   if var_name.contains(name) then
-//     closeTofu(s"Variable declaration error at line: \n$line\n\nVariable of name $name already exists!")
   Vector(name, value)
-
-// def setVariable(line: String) =
-//   val variable = getVariableProperties(line, "set")
-//   val name = variable(0); val value = variable(1)
-//
-//   debugMessage(s"Assigning new variable of name $name and value $value")
-//   var_name = var_name :+ name
-//   var_val = var_val :+ value
 
 def setVariable_str(line: String) =
   val variable = getVariableProperties(line, "string")

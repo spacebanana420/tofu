@@ -1,8 +1,13 @@
 package tofu.parser
 
 import tofu.reader.findLineStart
-import tofu.runner.{readVariable_str_safe, readVariable_int_safe}
+import tofu.variables.{readVariable_str_safe, readVariable_int_safe}
 import tofu.debug_printSeq
+
+def findInList(find: String, list: Seq[String], i: Int = 0): Int =
+  if i >= list.length then -1
+  else if find == list(i) then i
+  else findInList(find, list, i+1)
 
 def startsWith(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
   if i >= line.length || keyword.length == tmp.length then
@@ -15,13 +20,6 @@ def startsWith_strict(line: String, keyword: String, tmp: String = "", i: Int = 
   else if keyword == tmp && (line(i) == ' ' || line(i) == '\t') then
     true
   else startsWith_strict(line, keyword, tmp + line(i), i+1)
-
-// def exactMatch(line: String, keyword: String, tmp: String = "", i: Int = 0): Boolean =
-//   if i >= line.length then
-//     tmp == keyword
-//   else if line(i) != ' ' && line(i) != '\t' then
-//     exactMatch(line, keyword, tmp + line(i), i+1)
-//   else exactMatch(line, keyword, tmp, i+1)
 
 def getName(line: String, i: Int, s: String = ""): String =
   if i >= line.length || line(i) == ' ' || line(i) == '\t' then s
@@ -44,15 +42,6 @@ def getFuncNames(script: Seq[String], indexes: Seq[Int], names: Vector[String] =
     val name = getName(line, name_start)
     getFuncNames(script, indexes, names :+ name, i+1)
 
-// private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, strict: Boolean, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
-//   if i >= script.length then
-//     if strict then start_count == end_count else start_count <= end_count
-//   else
-//     val more_start = if startsWith(script(i), start_keyword) then 1 else 0
-//     val more_end = if startsWith(script(i), end_keyword) then 1 else 0
-//     verifyCode(script, start_keyword, end_keyword, strict, start_count + more_start, end_count + more_end, i+1)
-
-//use older version of this function if this one is worse
 private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: String, start_count: Int = 0, end_count: Int = 0, i: Int = 0): Boolean =
   if i >= script.length then start_count == end_count
   else
@@ -62,6 +51,7 @@ private def verifyCode(script: Seq[String], start_keyword: String, end_keyword: 
 
 def verifyFunctions(script: Seq[String]): Boolean = verifyCode(script, "function", "end")
 def verifyIfs(script: Seq[String]): Boolean = verifyCode(script, "if", "endif")
+def verifyWhile(script: Seq[String]): Boolean = verifyCode(script, "while", "endwhile")
 
 def mkstr_raw(in: Seq[String], str: String = "", i: Int = 0): String =
   if i >= in.length then str
