@@ -13,16 +13,27 @@ Tofu's official implementation is an interpreter written in Scala. To run said i
 
 I also distribute x86_64 binaries for Linux, so if you happen to use a Linux system with this CPU architecture, you don't need Java or Scala.
 
+To run a script, you can run `tofu script.tofu` (assuming the name is "script.tofu").
+
+You can also pass CLI arguments as global variables: `tofu script.tofu var1 var2 var3`.
+
 ## Documentation and getting started
 
-Tofu has a small specification and feature-set. You can begin learning how to use it in the links below. The following documentation is written for **Tofu 0.2**
+Tofu has a small specification and feature-set. You can begin learning how to use it in the links below.
+
+### Tofu v0.4 Documentation
 
 * **[Syntax and instruction set](doc/instructions.md)**
 * **[Conditions and branches](doc/conditions.md)**
 * **[Variables](doc/variables.md)**
 
-## Building from source
+### Tofu v0.3 Documentation
 
+* **[Syntax and instruction set](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/instructions.md)**
+* **[Conditions and branches](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/conditions.md)**
+* **[Variables](https://github.com/spacebanana420/tofu/tree/v0.3.1/doc/variables.md)**
+
+## Building from source
 
 ### Scalac
 

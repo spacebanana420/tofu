@@ -4,40 +4,97 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 
 ### Available instructions
 
-* set
+* string
+* int
+* calcint
+* readstr
 * print
-* goto
+* call
 * return
 * exec
 * stop
+* sleep
+* break
 
+## string
 
-## set
-
-`set` assigns a variable which can be read later by some instructions. It follows the syntax `set NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
+`string` assigns a variable of type `string` (text-based) which can be read later by many instructions. It follows the syntax `string NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
 
 Example:
 
 ```
-set message, I love Tofu
+string message, I love Tofu
 
 print $message
 ```
 
 The line `print $message` will print "I love Tofu". Variables, just like functions, have no privacy. This means that, once the variable is set, any part of the script from this point onwards can access it.
 
-At the moment, variables can only be of the string type, and so they are merely text. Numerical variables are a planned feature for a future version.
-
 You can also use the value of an already-existing variable to set the new one:
 
 ```
-set variable1, 234
-set variable2, $variable1
+string variable1, baguette
+string variable2, $variable1
 
 print $variable2
 ```
 
-This will print "234".
+This will print "baguette".
+
+## int
+
+`int` assigns a variable of type `int` (numeric) which can be read later by many instructions. It follows the syntax `int NAME, VALUE`. An assigned variable can be read by typing its name, followed by the character '$'.
+
+Example:
+
+```
+int message, 234
+
+print $message
+```
+
+The line `print $message` will print "234". Variables, just like functions, have no privacy. This means that, once the variable is set, any part of the script from this point onwards can access it.
+
+You can also use the value of an already-existing variable to set the new one:
+
+```
+string variable1, 4235
+string variable2, $variable1
+
+print $variable2
+```
+
+This will print "4235".
+
+## calcint
+
+Performs arithmetic calculations from left to right and assigns the result as a variable
+
+Example:
+
+```
+int a, 45
+calcint result, 3 + 5 + $a - 1
+print $result
+```
+
+Available operators:
+* `+`
+* `-`
+* `*`
+* `/`
+* `%`
+
+## readstr
+
+Reads user input and declares the value as a string variable:
+
+```
+readstr variable1
+print $variable1
+```
+
+The value is determined by the user at runtime, but the name of the variable must be given.
 
 ## print
 
@@ -52,9 +109,9 @@ print I really love $food
 ```
 This will print "I really love tofu"
 
-## goto
+## call
 
-`goto` executes a function if it exists. It follows the syntax `goto NAME`.
+`call` executes a function if it exists. It follows the syntax `call NAME`.
 
 Example:
 
@@ -63,7 +120,7 @@ function printstuff
   print Fried tofu is yummy
 end
 
-goto printstuff
+call printstuff
 ```
 This script executes the function "printstuff", and as a result it prints "Fried tofu is yummy".
 
@@ -80,7 +137,7 @@ function printstuff
   print Baguette
 end
 
-goto printstuff
+call printstuff
 ```
 
 "Baguette" is never printed, because the line before returns the function, closing it earlier
@@ -116,3 +173,32 @@ print Oregano
 ```
 This script prints "Fried tofu", but never ends up printing "Oregano", because the script is terminated before that point.
 
+## sleep
+
+Pauses execution of the script for a certain amount, measured in milliseconds
+
+```
+sleep 300
+
+print The program paused for 300 milliseconds
+
+sleep 300 300 300
+
+print The program paused for 900 milliseconds
+```
+
+Passing strings to this instruction will return a syntax error.
+
+## break
+
+Interrupts a loop execution:
+
+```
+int c, 0
+while $c < 3
+  print C: $c
+  calcint c, $c + 1
+  break
+endwhile
+```
+Only one instance of this loop runs because the keyword `break` cancels futher executions, including any lines inside the loop block that are below it.

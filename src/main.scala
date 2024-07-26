@@ -1,23 +1,41 @@
 package tofu
 
-import tofu.reader.*, tofu.parser.*, tofu.runner.*
+import tofu.reader.*, tofu.parser.*, tofu.runner.*, tofu.variables.*
 import java.io.File
 
 var debug_mode: Boolean = false
-private val interpreter_version = "Tofu version 0.2"
+private val interpreter_version = "Tofu version 0.4"
 
 @main def main(args: String*) =
-  val argv = args.toVector
-  readArgs(argv)
-  val scripts = argv.filter(x => isScript(x))
-  script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
-  debug_printSeq("The following CLI args have been passed to the script", script_args)
+  val scripts = parseCLI(args.toVector)
   for s <- scripts do runScript(s)
 
-private def readArgs(args: Seq[String]) =
-  if args.contains("--debug") then debug_mode = true
-  if args.contains("--version") then printVersion()
-  if args.contains("--help") then printHelp()
+private def parseCLI(argv: Vector[String]): Vector[String] =
+  val hasArgs = readArgs(argv)
+  val scripts = argv.filter(x => isScript(x))
+  val script_args = argv.filter(x => x.length > 0 && !isScript(x) && x(0) != '-')
+  addGlobalVariables(script_args)
+  debug_printSeq("The following CLI args have been passed to the script", script_args)
+  debug_printSeq("Startup variables:", var_name)
+  if scripts.length == 0 && !hasArgs then printHelp()
+  scripts
+
+
+private def addGlobalVariables(vars: Vector[String], i: Int = 0): Unit =
+  if i < vars.length then
+    if isInt(vars(i)) then declareInt(i.toString(), mkInt(vars(i)))
+    else declareString(i.toString(), vars(i))
+    addGlobalVariables(vars, i+1)
+
+private def readArgs(args: Seq[String]): Boolean =
+  val d = args.contains("--debug")
+  val v = args.contains("--version")
+  val h = args.contains("--help")
+
+  if d then debug_mode = true
+  if v then printVersion()
+  if h then printHelp()
+  v || h
 
 private def isScript(arg: String): Boolean =
   val f_arg = File(arg)
