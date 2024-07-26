@@ -55,15 +55,15 @@ def replaceInt(name: String, value: Int) =
 def replaceInt(i: Int, value: Int) = int_val(var_pointer(i)) = value
 
 def addToArray(name: String, value: Any) =
-  val index = findInList(name, var_name)
-  if index != -1 && var_type(index) == variable_type.array then
-    array_val(var_pointer(index)).add(value)
+  val arrayvar = TofuVar(name)
+  if arrayvar.vartype == variable_type.array then
+    array_val(arrayvar.pointer).add(value)
   else
     closeTofu(s"Error: Array $name not found or not an array type")
 
 def getFromArray(name: String, variable: String, index: Int): Any =
-  val varIndex = findInList(name, var_name)
-  if varIndex != -1 && var_type(varIndex) == variable_type.array then
-    array_val(var_pointer(varIndex)).get(index)
+  val arrayvar = TofuVar(name)
+  if arrayvar.vartype == variable_type.array then
+    array_val(arrayvar.pointer).get(index)
   else
     closeTofu(s"Error: Array $name not found or not an array type")
