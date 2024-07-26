@@ -3,6 +3,7 @@ package tofu.parser
 import tofu.reader.findLineStart
 import tofu.variables.{readVariable_str_safe, readVariable_int_safe}
 import tofu.{debugMessage, debug_printSeq}
+import tofu.closeTofu
 
 def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   if i >= list.length then -1
