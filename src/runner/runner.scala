@@ -73,29 +73,24 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arradd" =>
           val (name, value) = parseArrayAddition(s(i))
-          value match {
+          value match
             case intValue: Int =>
               addToArray(name, intValue)
             case strValue: String =>
-              try {
+              try
                 val intValue = strValue.toInt
                 addToArray(name, intValue)
-              } catch {
-                case e: NumberFormatException =>
-                  addToArray(name, strValue)
-              }
-          }
+              catch case e: NumberFormatException => addToArray(name, strValue)
           loopScript(s, ifunc, nfunc, i+1)
         case "arrget" =>
           val (name, variable, index) = parseArrayAccess(s(i))
-          getFromArray(name, variable, index) match {
+          getFromArray(name, variable, index) match
             case intValue: Int =>
               declareInt(variable, intValue)
             case strValue: String =>
               declareString(variable, strValue)
             case other =>
               closeTofu(s"Type error! Value '$other' from array '$name' at index $index is not an Int or String!")
-          }
           loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
