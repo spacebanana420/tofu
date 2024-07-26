@@ -67,6 +67,20 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "readstr" =>
           read_string(s(i))
           loopScript(s, ifunc, nfunc, i+1)
+        case "array" =>
+          val name = parseArrayDeclaration(s(i))
+          declareArray(name)
+          loopScript(s, ifunc, nfunc, i+1)
+        case "arradd" =>
+          val (name, value) = parseArrayAddition(s(i))
+          val parsedValue = readVariable_class_safe(value).value
+          addToArray(name, parsedValue)
+          loopScript(s, ifunc, nfunc, i+1)
+        case "arrget" =>
+          val (name, index) = parseArrayAccess(s(i))
+          val value = getFromArray(name, index)
+          println(value)
+          loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -102,7 +116,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "readstr", "while", "sleep", "calcint", "int",
-"print", "if", "function", "exec", "call", "break", "stop"),
+"print", "if", "function", "exec", "call", "break", "stop",
+"array", "arradd", "arrget"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)
