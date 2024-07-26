@@ -31,3 +31,8 @@ def verifyWhileCondition(script: Seq[String]) =
   for s <- script do
     if startsWith_strict(s, "while") && !verifyCondition(s, false) then
       closeTofu(s"Syntax error! While loop condition at line\n$s\nLacks elements and an operator to compare them to!")
+
+def verifyReadstr(script: Seq[String]) =
+  for s <- script do
+    if startsWith_strict(s, "readstr") && findLineStart(s, 7) == -1 then
+      closeTofu(s"Syntax error! User input read at line\n$s\nLacks a name attribute to give to the variable it declares!")

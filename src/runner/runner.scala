@@ -148,3 +148,4 @@ def runStartupChecks(script: Seq[String]) =
 
   verifyConditions(script)
   verifyWhileCondition(script)
+  verifyReadstr(script)
