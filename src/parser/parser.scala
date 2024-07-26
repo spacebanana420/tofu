@@ -76,19 +76,19 @@ def parseArrayDeclaration(line: String): String =
   val start = findLineStart(line, 5)
   getName(line, start)
 
-def parseArrayAddition(line: String): (String, String) =
+def parseArrayAddition(line: String): (String, Any) =
   val start = findLineStart(line, 7)
   val parts = line.substring(start).split(",").map(_.trim)
   if parts.length != 2 then
     closeTofu(s"Syntax error in array addition: $line")
   (parts(0), parts(1))
 
-def parseArrayAccess(line: String): (String, Int) =
+def parseArrayAccess(line: String): (String, String, Int) =
   val start = findLineStart(line, 7)
   val parts = line.substring(start).split(",").map(_.trim)
-  if parts.length != 2 then
+  if parts.length != 3 then
     closeTofu(s"Syntax error in array access: $line")
-  (parts(0), parts(1).toInt)
+  (parts(0), parts(1), parts(2).toInt)
 
 def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
   if i >= s.length then
