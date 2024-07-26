@@ -64,6 +64,9 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "string" =>
           setVariable_str(s(i))
           loopScript(s, ifunc, nfunc, i+1)
+        case "readstr" =>
+          read_string(s(i))
+          loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -98,7 +101,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 
 private def lineType(line: String, types: Vector[String] =
 Vector(
-"string", "while", "sleep", "calcint", "int",
+"string", "readstr", "while", "sleep", "calcint", "int",
 "print", "if", "function", "exec", "call", "break", "stop"),
 i: Int = 0): String =
   if i >= types.length then "none"

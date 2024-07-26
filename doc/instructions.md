@@ -7,6 +7,7 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * string
 * int
 * calcint
+* readstr
 * print
 * call
 * return
@@ -83,6 +84,17 @@ Available operators:
 * `*`
 * `/`
 * `%`
+
+## readstr
+
+Reads user input and declares the value as a string variable:
+
+```
+readstr variable1
+print $variable1
+```
+
+The value is determined by the user at runtime, but the name of the variable must be given.
 
 ## print
 

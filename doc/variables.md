@@ -7,6 +7,12 @@ Tofu's specification contains a simple way to store information in memory to be 
 * **string** - For text variables, such as "tofu"
 * **int** - For numerical variables, such as 24
 
+### Declaring variables
+* **string** - Declares a string value directly
+* **int** - Declares an integer value directly
+* **calcint** - Performs an arithmetic calculation and declares the result as an int
+* **readstr** - Reads user input and declares the input as a string
+
 Example:
 
 ```
@@ -98,3 +104,15 @@ print $result
 ```
 
 Note that you cannot use the operators `/` and `%` if you are dividing a number by 0.
+
+
+## Reading user input
+
+With the instruction `readstr`, you can read user input and directly declare it as a string variable:
+
+```
+readstr variable1
+print $variable1
+```
+
+The value is determined by the user at runtime, but the name of the variable must be given.

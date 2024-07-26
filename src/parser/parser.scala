@@ -66,6 +66,11 @@ def parseString(line: String, start: Int): String =
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
 
+def parseString_raw(line: String, start: Int): String =
+  val str = mkstr(line, i = start)
+  debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
+  mkstr_raw(str)
+
 def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
   if i >= s.length then
     if count == 0 then i else -1 //-1 must not happen!!!!!
