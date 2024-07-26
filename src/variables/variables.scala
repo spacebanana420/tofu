@@ -26,11 +26,11 @@ class TofuVar(name: String):
   val vartype = getType()
   val pointer = getPointer()
 
-  val value_str = if vartype == variable_type.string then getValue_str() else ""
+  val value_str = if vartype == variable_type.string then getValue_str() else name
   val value_int = if vartype == variable_type.integer then getValue_int() else 0
   val value_array = if vartype == variable_type.array then getValue_array() else new TofuArray()
   val value =
-    if vartype == variable_type.none then ""
+    if vartype == variable_type.none then name
     else if vartype == variable_type.integer then value_int
     else value_str
 
