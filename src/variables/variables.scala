@@ -16,7 +16,9 @@ class TofuArray:
   private var elements: Vector[Any] = Vector()
 
   def add(value: Any) = elements = elements :+ value
-  def get(index: Int): Any = elements(index)
+  def get(index: Int): Any =
+    if index >= elements.length then closeTofu(s"Array read error! Array of size ${elements.length} is too small for index $index!")
+    elements(index)
   def size(): Int = elements.size
   def toVector(): Vector[Any] = elements
 
