@@ -67,6 +67,31 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "readstr" =>
           read_string(s(i))
           loopScript(s, ifunc, nfunc, i+1)
+        case "array" =>
+          val name = parseArrayDeclaration(s(i))
+          declareArray(name)
+          loopScript(s, ifunc, nfunc, i+1)
+        case "arradd" =>
+          val (name, value) = parseArrayAddition(s(i))
+          value match
+            case intValue: Int =>
+              addToArray(name, intValue)
+            case strValue: String =>
+              try
+                val intValue = strValue.toInt
+                addToArray(name, intValue)
+              catch case e: NumberFormatException => addToArray(name, strValue)
+          loopScript(s, ifunc, nfunc, i+1)
+        case "arrget" =>
+          val (name, variable, index) = parseArrayAccess(s(i))
+          getFromArray(name, variable, index) match
+            case intValue: Int =>
+              declareInt(variable, intValue)
+            case strValue: String =>
+              declareString(variable, strValue)
+            case other =>
+              closeTofu(s"Type error! Value '$other' from array '$name' at index $index is not an Int or String!")
+          loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -102,7 +127,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "readstr", "while", "sleep", "calcint", "int",
-"print", "if", "function", "exec", "call", "break", "stop"),
+"print", "if", "function", "exec", "call", "break", "stop",
+"array", "arradd", "arrget"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)

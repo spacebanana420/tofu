@@ -3,6 +3,7 @@ package tofu.parser
 import tofu.reader.findLineStart
 import tofu.variables.{readVariable_str_safe, readVariable_int_safe}
 import tofu.{debugMessage, debug_printSeq}
+import tofu.closeTofu
 
 def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   if i >= list.length then -1
@@ -70,6 +71,24 @@ def parseString_raw(line: String, start: Int): String =
   val str = mkstr(line, i = start)
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
+  
+def parseArrayDeclaration(line: String): String =
+  val start = findLineStart(line, 5)
+  getName(line, start)
+
+def parseArrayAddition(line: String): (String, Any) =
+  val start = findLineStart(line, 7)
+  val parts = line.substring(start).split(",").map(x => x.trim())
+  if parts.length != 2 then
+    closeTofu(s"Syntax error in array addition: $line\n\nThe array name and/or the new value to append are missing!")
+  (parts(0), parts(1))
+
+def parseArrayAccess(line: String): (String, String, Int) =
+  val start = findLineStart(line, 7)
+  val parts = line.substring(start).split(",").map(x => x.trim())
+  if parts.length != 3 then
+    closeTofu(s"Syntax error in array access: $line\n\nThe array name, variable and/or the new value to get are missing!")
+  (parts(0), parts(1), parts(2).toInt)
 
 def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
   if i >= s.length then
