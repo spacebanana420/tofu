@@ -8,16 +8,21 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * int
 * calcint
 * readstr
-* print
+* array
+* arrget
+* arradd
+
 * call
 * return
 * exec
 * stop
 * sleep
 * break
-* array
-* arrget
-* arradd
+
+* print
+* clear
+* color
+* locate
 
 ## string
 
@@ -97,20 +102,26 @@ readstr variable1
 print $variable1
 ```
 
+## array, arrget and arradd
+
+You can declare arrays as a container to multiple elements of integer or string value:
+
+```
+//Create a new array or replace if one named "info" already exists
+array info
+//Add an integer element of "45" to info
+arradd info, 45
+//Add a string element of "random text" to info
+arradd info, random text
+
+//Read the element 0 (the first element) from "info" and declare a new variable with its value
+arrget info, variable1, 0
+
+//Print variable1, which is an integer of value "45"
+print variable1
+```
+
 The value is determined by the user at runtime, but the name of the variable must be given.
-
-## print
-
-`print` prints a message to the terminal output. It follows the syntax `print MESSAGE`. The message can be infinite in length as long as it remains all in one line. You can read variables and pass them to the message.
-
-Example:
-
-```
-set food, tofu
-
-print I really love $food
-```
-This will print "I really love tofu"
 
 ## call
 
@@ -206,21 +217,15 @@ endwhile
 ```
 Only one instance of this loop runs because the keyword `break` cancels futher executions, including any lines inside the loop block that are below it.
 
-## array, arrget and arradd
+## print
 
-You can declare arrays as a container to multiple elements of integer or string value:
+`print` prints a message to the terminal output. It follows the syntax `print MESSAGE`. The message can be infinite in length as long as it remains all in one line. You can read variables and pass them to the message.
+
+Example:
 
 ```
-//Create a new array or replace if one named "info" already exists
-array info
-//Add an integer element of "45" to info
-arradd info, 45
-//Add a string element of "random text" to info
-arradd info, random text
+set food, tofu
 
-//Read the element 0 (the first element) from "info" and declare a new variable with its value
-arrget info, variable1, 0
-
-//Print variable1, which is an integer of value "45"
-print variable1
+print I really love $food
 ```
+This will print "I really love tofu"
