@@ -4,7 +4,7 @@ import tofu.reader.*, tofu.parser.*, tofu.runner.*, tofu.variables.*
 import java.io.File
 
 var debug_mode: Boolean = false
-private val interpreter_version = "Tofu version 0.4"
+private val interpreter_version = "Tofu version 0.5"
 
 @main def main(args: String*) =
   val scripts = parseCLI(args.toVector)

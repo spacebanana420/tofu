@@ -57,3 +57,31 @@ private def readvariable_generic(variable: String, i: Int = 0, v: String = ""): 
     v
   else if i == 0 then readvariable_generic(variable, i+1, v)
   else readvariable_generic(variable, i+1, v + variable(i))
+
+def parseArrayDeclaration(line: String): String =
+  val start = findLineStart(line, 5)
+  getName(line, start)
+
+def parseArrayAddition(line: String): (String, String) =
+  val start = findLineStart(line, 7)
+  val parts = line.substring(start).split(",").map(x => x.trim())
+  if parts.length < 2 then
+    closeTofu(s"Syntax error in array addition: $line\n\nThe array name and/or the new value to append are missing!")
+  (parts(0), parts(1))
+
+def parseArrayAccess(line: String): (String, String, Int) =
+  val start = findLineStart(line, 7)
+  val parts = line.substring(start).split(",").map(x => x.trim())
+  if parts.length < 3 then
+    closeTofu(s"Syntax error in array access: $line\n\nThe array name, variable and/or the new value to get are missing!")
+  (parts(0), parts(1), parts(2).toInt)
+
+def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
+  if i >= s.length then
+    if count == 0 then i else -1 //-1 must not happen!!!!!
+  else if count == 0 then i
+  else if startsWith_strict(s(i), startk) then
+    findBlockEnd(s, startk, endk, i+1, count+1)
+  else if startsWith_strict(s(i), endk) then
+    findBlockEnd(s, startk, endk, i+1, count-1)
+  else findBlockEnd(s, startk, endk, i+1, count)

@@ -6,12 +6,16 @@ Tofu's specification contains a simple way to store information in memory to be 
 
 * **string** - For text variables, such as "tofu"
 * **int** - For numerical variables, such as 24
+* **array** - Stores multiple elements inside, can mix integers with strings
 
 ### Declaring variables
 * **string** - Declares a string value directly
 * **int** - Declares an integer value directly
 * **calcint** - Performs an arithmetic calculation and declares the result as an int
 * **readstr** - Reads user input and declares the input as a string
+* **array** - Creates a new array
+* **arradd** - Adds a new element to an array
+* **arrget** - Gets an element from the array and declares it as a variable
 
 Example:
 
@@ -116,3 +120,22 @@ print $variable1
 ```
 
 The value is determined by the user at runtime, but the name of the variable must be given.
+
+## Arrays
+
+With the instructions `array`, `arradd` and `arrget`, you can declare arrays as a container to multiple elements of integer or string value:
+
+```
+//Create a new array or replace if one named "info" already exists
+array info
+//Add an integer element of "45" to info
+arradd info, 45
+//Add a string element of "random text" to info
+arradd info, random text
+
+//Read the element 0 (the first element) from "info" and declare a new variable with its value
+arrget info, variable1, 0
+
+//Print variable1, which is an integer of value "45"
+print variable1
+```

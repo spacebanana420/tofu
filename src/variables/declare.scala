@@ -9,13 +9,10 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-var array_val: Array[TofuArray] = Array()
-
 def declareArray(name: String) =
   val index = findInList(name, var_name)
   if index != -1 then
-    // to-do: replace array
-    ()
+    replaceArray(index, new TofuArray())
   else
     var_name = var_name :+ name
     var_type = var_type :+ variable_type.array
@@ -54,6 +51,13 @@ def replaceInt(name: String, value: Int) =
 
 def replaceInt(i: Int, value: Int) = int_val(var_pointer(i)) = value
 
+def replaceArray(name: String, value: TofuArray) =
+  val index = findInList(name, var_name)
+  if index != -1 then
+    array_val(var_pointer(index)) = value
+
+def replaceArray(i: Int, value: TofuArray) = array_val(var_pointer(i)) = value
+
 def addToArray(name: String, value: Any) =
   val arrayvar = TofuVar(name)
   if arrayvar.vartype == variable_type.array then
@@ -61,7 +65,7 @@ def addToArray(name: String, value: Any) =
   else
     closeTofu(s"Error: Array $name not found or not an array type")
 
-def getFromArray(name: String, variable: String, index: Int): Any =
+def getFromArray(name: String, index: Int): Any =
   val arrayvar = TofuVar(name)
   if arrayvar.vartype == variable_type.array then
     array_val(arrayvar.pointer).get(index)
