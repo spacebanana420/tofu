@@ -123,7 +123,7 @@ The value is determined by the user at runtime, but the name of the variable mus
 
 ## Arrays
 
-With the instructions `array`, `arradd` and `arrget`, you can declare arrays as a container to multiple elements of integer or string value:
+With the instructions `array`, `arradd`, `arrget`, `arreplace` you can declare arrays as a container to multiple elements of integer or string value:
 
 ```
 //Create a new array or replace if one named "info" already exists
