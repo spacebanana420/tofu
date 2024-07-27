@@ -9,8 +9,6 @@ import scala.sys.process.*
 import tofu.reader.readScript
 import tofu.closeTofu
 
-var array_val: Array[TofuArray] = Array()
-
 def declareArray(name: String) =
   val index = findInList(name, var_name)
   if index != -1 then

@@ -11,8 +11,10 @@ import tofu.closeTofu
 var var_name = Vector[String]()
 var var_type = Vector[variable_type]()
 var var_pointer = Vector[Int]()
+
 var string_val = Array[String]()
 var int_val = Array[Int]()
+var array_val: Array[TofuArray] = Array()
 
 var function_stack = Vector[Int]()
 var while_stack = Vector[Int]()

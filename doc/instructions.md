@@ -15,6 +15,9 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * stop
 * sleep
 * break
+* array
+* arrget
+* arradd
 
 ## string
 
@@ -202,3 +205,22 @@ while $c < 3
 endwhile
 ```
 Only one instance of this loop runs because the keyword `break` cancels futher executions, including any lines inside the loop block that are below it.
+
+## array, arrget and arradd
+
+You can declare arrays as a container to multiple elements of integer or string value:
+
+```
+//Create a new array or replace if one named "info" already exists
+array info
+//Add an integer element of "45" to info
+arradd info, 45
+//Add a string element of "random text" to info
+arradd info, random text
+
+//Read the element 0 (the first element) from "info" and declare a new variable with its value
+arrget info, variable1, 0
+
+//Print variable1, which is an integer of value "45"
+print variable1
+```
