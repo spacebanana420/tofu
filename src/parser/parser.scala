@@ -71,3 +71,17 @@ def parseString_raw(line: String, start: Int): String =
   val str = mkstr(line, i = start)
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
+
+def parseLocate(line: String): (Int, Int) =
+  val start = findLineStart(line, 6)
+  val parts = line.substring(start).split(",").map(_.trim)
+  if parts.length != 2 then
+    closeTofu(s"Syntax error in locate: $line\n\nExpected format: locate x, y")
+  (parts(0).toInt, parts(1).toInt)
+
+def parseColor(line: String): (String, String) =
+  val start = findLineStart(line, 5)
+  val parts = line.substring(start).split(",").map(_.trim)
+  if parts.length != 2 then
+    closeTofu(s"Syntax error in color: $line\n\nExpected format: color text/background, color")
+  (parts(0), parts(1))
