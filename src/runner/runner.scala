@@ -84,7 +84,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
             else addToArray(name, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
         case "arrget" =>
-          val (name, variable, index) = parseArrayAccess(s(i))
+          val (name, variable, index) = parseArrayAccess(s(i), 7)
           getFromArray(name, index) match
             case intValue: Int =>
               declareInt(variable, intValue)
@@ -94,7 +94,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
               closeTofu(s"Type error! Value '$other' from array '$name' at index $index is not an Int or String!")
           loopScript(s, ifunc, nfunc, i+1)
         case "arreplace" =>
-          val (name, value, index) = parseArrayAccess(s(i))
+          val (name, value, index) = parseArrayAccess(s(i), 9)
           val tvar = readVariable_class_safe(value)
           if tvar.vartype == variable_type.integer then
             replaceInArray(name, index, tvar.value_int)

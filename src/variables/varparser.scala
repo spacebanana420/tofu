@@ -69,8 +69,8 @@ def parseArrayAddition(line: String): (String, String) =
     closeTofu(s"Syntax error in array addition: $line\n\nThe array name and/or the new value to append are missing!")
   (parts(0), parts(1))
 
-def parseArrayAccess(line: String): (String, String, Int) =
-  val start = findLineStart(line, 7)
+def parseArrayAccess(line: String, keyword_length: Int): (String, String, Int) =
+  val start = findLineStart(line, keyword_length)
   val parts = line.substring(start).split(",").map(x => x.trim())
   if parts.length < 3 then
     closeTofu(s"Syntax error in array access: $line\n\nThe array name, variable and/or the new value to get are missing!")
