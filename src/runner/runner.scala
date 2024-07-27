@@ -73,18 +73,16 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arradd" =>
           val (name, value) = parseArrayAddition(s(i))
-          value match
-            case intValue: Int =>
-              addToArray(name, intValue)
-            case strValue: String =>
-              try
-                val intValue = strValue.toInt
-                addToArray(name, intValue)
-              catch case e: NumberFormatException => addToArray(name, strValue)
+          val tvar = readVariable_class_safe(value)
+          if tvar.vartype == variable_type.integer then
+            addToArray(name, tvar.value_int)
+          else
+            if isInt(value) then addToArray(name, mkInt(value))
+            else addToArray(name, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
         case "arrget" =>
           val (name, variable, index) = parseArrayAccess(s(i))
-          getFromArray(name, variable, index) match
+          getFromArray(name, index) match
             case intValue: Int =>
               declareInt(variable, intValue)
             case strValue: String =>

@@ -15,7 +15,7 @@ enum variable_type:
 class TofuArray:
   private var elements: Vector[Any] = Vector()
 
-  def add(value: Any): Unit = elements = elements :+ value
+  def add(value: Any) = elements = elements :+ value
   def get(index: Int): Any = elements(index)
   def size(): Int = elements.size
   def toVector(): Vector[Any] = elements

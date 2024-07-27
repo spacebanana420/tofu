@@ -61,7 +61,7 @@ def addToArray(name: String, value: Any) =
   else
     closeTofu(s"Error: Array $name not found or not an array type")
 
-def getFromArray(name: String, variable: String, index: Int): Any =
+def getFromArray(name: String, index: Int): Any =
   val arrayvar = TofuVar(name)
   if arrayvar.vartype == variable_type.array then
     array_val(arrayvar.pointer).get(index)
