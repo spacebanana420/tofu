@@ -5,7 +5,7 @@ import scala.io.AnsiColor
 object TerminalOps {
   def locate(x: Int, y: Int): String = s"\u001b[${y};${x}H"
   
-  def clearScreen(): String = s"\u001b[2J\u001b[H"
+  def clearScreen(): String = s"\u001B[3J\u001B[1J\u001B[H"
   
   def getColor(color: String): String = color match {
     case "red" => AnsiColor.RED
