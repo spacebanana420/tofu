@@ -4,6 +4,7 @@ import tofu.{debugMessage, debug_printSeq}
 import tofu.variables.*
 import tofu.parser.*
 import tofu.reader.findLineStart
+import tofu.terminal.TerminalOps
 
 import tofu.reader.readScript
 import tofu.closeTofu
@@ -101,6 +102,22 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
         case "print" =>
           printArg(s(i))
           loopScript(s, ifunc, nfunc, i+1)
+        case "clear" =>
+          print(TerminalOps.clearScreen())
+          loopScript(s, ifunc, nfunc, i+1)
+        case "locate" =>
+          val (x, y) = parseLocate(s(i))
+          print(TerminalOps.locate(x, y))
+          loopScript(s, ifunc, nfunc, i+1)
+        case "color" =>
+          val (colorType, color) = parseColor(s(i))
+          debugMessage(s"Changing color of '$colorType' to '$color'")
+          colorType match {
+            case "text" => print(TerminalOps.getColor(color))
+            case "background" => print(TerminalOps.getBackgroundColor(color))
+            case _ => closeTofu(s"Syntax error! Unknown color type '$colorType'")
+          }
+          loopScript(s, ifunc, nfunc, i+1)
         case "sleep" =>
           runSleep(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -127,8 +144,8 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
 private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "readstr", "while", "sleep", "calcint", "int",
-"print", "if", "function", "exec", "call", "break", "stop",
-"array", "arradd", "arrget"),
+"print", "clear", "locate", "color", "if", "function", "exec", "call",
+"break", "stop", "array", "arradd", "arrget"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)

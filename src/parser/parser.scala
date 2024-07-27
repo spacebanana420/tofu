@@ -99,3 +99,17 @@ def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: In
   else if startsWith_strict(s(i), endk) then
     findBlockEnd(s, startk, endk, i+1, count-1)
   else findBlockEnd(s, startk, endk, i+1, count)
+
+def parseLocate(line: String): (Int, Int) =
+  val start = findLineStart(line, 6)
+  val parts = line.substring(start).split(",").map(_.trim)
+  if parts.length != 2 then
+    closeTofu(s"Syntax error in locate: $line\n\nExpected format: locate x, y")
+  (parts(0).toInt, parts(1).toInt)
+
+def parseColor(line: String): (String, String) =
+  val start = findLineStart(line, 5)
+  val parts = line.substring(start).split(",").map(_.trim)
+  if parts.length != 2 then
+    closeTofu(s"Syntax error in color: $line\n\nExpected format: color text/background, color")
+  (parts(0), parts(1))
