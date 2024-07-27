@@ -4,15 +4,15 @@ import tofu.{debugMessage, debug_printSeq, closeTofu}
 import tofu.variables.*
 import tofu.parser.*
 import tofu.reader.findLineStart
+import tofu.math_parser.evaluateExpression
 
 import scala.sys.process.*
 
 def calculate(strs: Seq[String], line: String): Int =
   debug_printSeq(s"Math string elements (length ${strs.length}):", strs)
-  if strs.length < 3 then closeTofu(s"Operator error! Calculation in line\n$line\nRequires at least 2 elements and 1 operator!")
-  if strs.length % 2 != 1 then closeTofu(s"Operator error! Calculation in line\n$line\nIs missing an element or operator")
-  val classes = strs.map(x => readVariable_class_safe(x))
-  calculateSeq(classes)
+  if strs.length < 2 then closeTofu(s"Operator error! Calculation in line\n$line\nRequires at least a variable name and an expression!")
+  val expression = strs.tail.mkString(" ")
+  evaluateExpression(expression)
 
 def calc_operator(e0: Int, e1: Int, o: String): Int =
   debugMessage(s"Calculating: $e0 $o $e1")
@@ -62,10 +62,13 @@ private def getMathStr(line: String, i: Int, math: String = "", copystr: Boolean
 
 def calculateInt(line: String) =
   val start = findLineStart(line, 7)
-  val name = getName_variable(line, i = start)
-  val mathstr = getMathStr(line, start)
-
-  val result = calculate(mkstr(mathstr), line)
+  val parts = line.substring(start).split(",", 2).map(_.trim)
+  if parts.length != 2 then
+    closeTofu(s"Syntax error! Calculation in line\n$line\nRequires a variable name and an expression separated by a comma!")
+  val name = parts(0)
+  val expression = parts(1)
+  
+  val result = evaluateExpression(expression)
   declareInt(name, result)
 
 private def math_mkInt(num: String): Int =
