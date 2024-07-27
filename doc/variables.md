@@ -137,5 +137,10 @@ arradd info, random text
 arrget info, variable1, 0
 
 //Print variable1, which is an integer of value "45"
-print variable1
+print $variable1
+
+//Changes the value of the first element of "info", re-declares variable1 and prints the new value
+arreplace info, 500, 0
+arrget info, variable1, 0
+print $variable1
 ```

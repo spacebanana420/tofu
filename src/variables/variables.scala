@@ -13,14 +13,18 @@ enum variable_type:
   case string, integer, array, none
   
 class TofuArray:
-  private var elements: Vector[Any] = Vector()
+  private var elements: Array[Any] = Array()
 
   def add(value: Any) = elements = elements :+ value
   def get(index: Int): Any =
     if index >= elements.length then closeTofu(s"Array read error! Array of size ${elements.length} is too small for index $index!")
     elements(index)
+  def replace(value: Any, i: Int) =
+    if i >= elements.length then closeTofu(s"Array read error! Array of size ${elements.length} is too small for index $i!")
+    elements(i) = value
+
   def size(): Int = elements.size
-  def toVector(): Vector[Any] = elements
+  def toArray(): Array[Any] = elements
 
 class TofuVar(name: String):
   val input = name
@@ -40,7 +44,7 @@ class TofuVar(name: String):
     vartype match
       case variable_type.string => value_str
       case variable_type.integer => value_int.toString()
-      case variable_type.array => value_array.toVector().toString()
+      case variable_type.array => value_array.toArray().toString()
       case variable_type.none => ""
 
   private def getType(): variable_type =

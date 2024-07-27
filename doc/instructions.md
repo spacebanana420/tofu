@@ -11,14 +11,13 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * array
 * arrget
 * arradd
-
+* arreplace
 * call
 * return
 * exec
 * stop
 * sleep
 * break
-
 * print
 * clear
 * color
@@ -102,7 +101,7 @@ readstr variable1
 print $variable1
 ```
 
-## array, arrget and arradd
+## array, arrget, arradd and arreplace
 
 You can declare arrays as a container to multiple elements of integer or string value:
 
@@ -118,7 +117,12 @@ arradd info, random text
 arrget info, variable1, 0
 
 //Print variable1, which is an integer of value "45"
-print variable1
+print $variable1
+
+//Changes the value of the first element of "info", re-declares variable1 and prints the new value
+arreplace info, 500, 0
+arrget info, variable1, 0
+print $variable1
 ```
 
 The value is determined by the user at runtime, but the name of the variable must be given.

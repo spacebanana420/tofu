@@ -71,3 +71,10 @@ def getFromArray(name: String, index: Int): Any =
     array_val(arrayvar.pointer).get(index)
   else
     closeTofu(s"Error: Array $name not found or not an array type")
+
+def replaceInArray(name: String, index: Int, value: Any) =
+  val arrayvar = TofuVar(name)
+  if arrayvar.vartype != variable_type.array then closeTofu(s"Error: Array $name not found or not an array type")
+  else
+    array_val(arrayvar.pointer).replace(value, index)
+

@@ -93,6 +93,16 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
             case other =>
               closeTofu(s"Type error! Value '$other' from array '$name' at index $index is not an Int or String!")
           loopScript(s, ifunc, nfunc, i+1)
+        case "arreplace" =>
+          val (name, value, index) = parseArrayAccess(s(i))
+          val tvar = readVariable_class_safe(value)
+          if tvar.vartype == variable_type.integer then
+            replaceInArray(name, index, tvar.value_int)
+          else
+            if isInt(value) then replaceInArray(name, index, mkInt(value))
+            else
+              replaceInArray(name, index, tvar.value_str)
+          loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -145,7 +155,7 @@ private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "readstr", "while", "sleep", "calcint", "int",
 "print", "clear", "locate", "color", "if", "function", "exec", "call",
-"break", "stop", "array", "arradd", "arrget"),
+"break", "stop", "array", "arradd", "arrget", "arreplace"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)
