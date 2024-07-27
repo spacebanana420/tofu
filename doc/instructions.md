@@ -75,7 +75,7 @@ This will print "4235".
 
 ## calcint
 
-Performs arithmetic calculations from left to right and assigns the result as a variable
+Performs arithmetic calculations and assigns the result as a variable
 
 Example:
 

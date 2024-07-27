@@ -90,7 +90,7 @@ You can use the keywords `exists` and `!exists` to check if a variable exists or
 
 ## Arithmetic calculations for integers
 
-With the instruction `calcint`, you can perform arithmetic calculations from left to right and assign the result as a variable which you can use later. The syntax is similar to `int`, as it requires a name and value to declare a variable, but the value is the result of the performed calculations.
+With the instruction `calcint`, you can perform arithmetic calculations and assign the result as a variable which you can use later. The syntax is similar to `int`, as it requires a name and value to declare a variable, but the value is the result of the performed calculations.
 
 Available operators:
 * `+`
