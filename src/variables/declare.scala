@@ -14,8 +14,7 @@ var array_val: Array[TofuArray] = Array()
 def declareArray(name: String) =
   val index = findInList(name, var_name)
   if index != -1 then
-    // to-do: replace array
-    ()
+    replaceArray(index, new TofuArray())
   else
     var_name = var_name :+ name
     var_type = var_type :+ variable_type.array
@@ -53,6 +52,13 @@ def replaceInt(name: String, value: Int) =
     int_val(var_pointer(index)) = value
 
 def replaceInt(i: Int, value: Int) = int_val(var_pointer(i)) = value
+
+def replaceArray(name: String, value: TofuArray) =
+  val index = findInList(name, var_name)
+  if index != -1 then
+    array_val(var_pointer(index)) = value
+
+def replaceArray(i: Int, value: TofuArray) = array_val(var_pointer(i)) = value
 
 def addToArray(name: String, value: Any) =
   val arrayvar = TofuVar(name)
