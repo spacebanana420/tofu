@@ -2,12 +2,12 @@ package tofu.terminal
 
 import scala.io.AnsiColor
 
-object TerminalOps {
+object TerminalOps:
   def locate(x: Int, y: Int): String = s"\u001b[${y};${x}H"
   
   def clearScreen(): String = s"\u001B[3J\u001B[1J\u001B[H"
   
-  def getColor(color: String): String = color match {
+  def getColor(color: String): String = color match
     case "red" => AnsiColor.RED
     case "green" => AnsiColor.GREEN
     case "blue" => AnsiColor.BLUE
@@ -23,9 +23,8 @@ object TerminalOps {
     case "reversed" => AnsiColor.REVERSED
     case "underlined" => AnsiColor.UNDERLINED
     case _ => throw new IllegalArgumentException(s"Unknown color '$color'")
-  }
   
-  def getBackgroundColor(color: String): String = color match {
+  def getBackgroundColor(color: String): String = color match
     case "red" => AnsiColor.RED_B
     case "green" => AnsiColor.GREEN_B
     case "blue" => AnsiColor.BLUE_B
@@ -41,5 +40,3 @@ object TerminalOps {
     case "reversed" => AnsiColor.REVERSED
     case "underlined" => AnsiColor.UNDERLINED
     case _ => throw new IllegalArgumentException(s"Unknown background color '$color'")
-  }
-}

@@ -229,3 +229,32 @@ set food, tofu
 print I really love $food
 ```
 This will print "I really love tofu"
+
+## clear, color and locate
+
+You can use `clear` to clear the terminal screen and line history:
+
+```
+print Some text
+print More text
+print Even more text
+clear
+print It's clean!
+```
+
+You can use `color` to define the foreground and background colors in your terminal:
+
+```
+color background, red
+color text, green
+
+print This text is green on top of a red background!
+```
+
+You can use `locate` to offset the next print message by X and Y lines/characters:
+
+```
+locate 20,7
+
+print This message is 20 lines lower and 7 characters to the right!
+```
