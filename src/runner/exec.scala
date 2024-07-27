@@ -6,7 +6,7 @@ import scala.sys.process.*
 import tofu.closeTofu
 
 private def addArg(args: Vector[String], arg: String): Vector[String] =
-  args :+ readVariable_str_safe(arg)
+  args :+ TofuVar(arg).value_str
 
 private def mkcommand(line: String, cmd: Vector[String] = Vector(), arg: String = "", i: Int = 0, ignore_spaces: Boolean = false): Vector[String] =
   if i >= line.length then

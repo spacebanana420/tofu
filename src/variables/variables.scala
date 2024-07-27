@@ -26,18 +26,18 @@ class TofuArray:
   def size(): Int = elements.size
   def toArray(): Array[Any] = elements
 
-class TofuVar(name: String):
-  val input = name
+class TofuVar(input: String):
+  val name = if input.length > 0 && input(0) == '$' then input.tail else input
+  val raw_name = input
   val index = findInList(name, var_name)
   val vartype = getType()
   val pointer = getPointer()
 
-  val value_str = if vartype == variable_type.string then getValue_str() else name
-  val value_int = if vartype == variable_type.integer then getValue_int() else 0
-  val value_array = if vartype == variable_type.array then getValue_array() else new TofuArray()
+  val value_str = if vartype == variable_type.string then string_val(pointer) else name
+  val value_int = if vartype == variable_type.integer then int_val(pointer) else 0
+  val value_array = if vartype == variable_type.array then array_val(pointer) else new TofuArray()
   val value =
-    if vartype == variable_type.none then name
-    else if vartype == variable_type.integer then value_int
+    if vartype == variable_type.integer then value_int
     else value_str
 
   def valueToString(): String =
@@ -45,18 +45,13 @@ class TofuVar(name: String):
       case variable_type.string => value_str
       case variable_type.integer => value_int.toString()
       case variable_type.array => value_array.toArray().toString()
-      case variable_type.none => ""
+      case _ => name
 
   private def getType(): variable_type =
     if index == -1 then variable_type.none else var_type(index)
 
   private def getPointer(): Int =
     if index == -1 then -1 else var_pointer(index)
-
-
-  private def getValue_str(): String = string_val(pointer)
-  private def getValue_int(): Int = int_val(pointer)
-  private def getValue_array(): TofuArray = array_val(pointer)
 end TofuVar
 
 def getVariableProperties(line: String, keyword: String): Vector[String] =

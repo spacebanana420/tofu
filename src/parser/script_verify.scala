@@ -1,7 +1,6 @@
 package tofu.parser
 
 import tofu.reader.findLineStart
-import tofu.variables.{readVariable_str_safe, readVariable_int_safe}
 import tofu.{debugMessage, debug_printSeq, closeTofu}
 import tofu.runner.conditionElements
 import tofu.variables.getVariableProperties

@@ -29,14 +29,14 @@ def calc_operator(e0: Int, e1: Int, o: String): Int =
     case _ => 0
 
 private def calculate_class(e0: TofuVar, e1: TofuVar, o: TofuVar): Int =
-  val operator = o.input
-  val num0 = if e0.vartype != variable_type.integer then math_mkInt(e0.input) else e0.value_int
-  val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.input) else e1.value_int
+  val operator = o.raw_name
+  val num0 = if e0.vartype != variable_type.integer then math_mkInt(e0.raw_name) else e0.value_int
+  val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.raw_name) else e1.value_int
   calc_operator(num0, num1, operator)
 
 private def calculate_class(e0: Int, e1: TofuVar, o: TofuVar): Int =
-  val operator = o.input
-  val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.input) else e1.value_int
+  val operator = o.raw_name
+  val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.raw_name) else e1.value_int
   calc_operator(e0, num1, operator)
 
 private def calculateSeq(s: Seq[TofuVar], finalval: Int = 0, i: Int = 0, first: Boolean = true): Int =
@@ -44,10 +44,10 @@ private def calculateSeq(s: Seq[TofuVar], finalval: Int = 0, i: Int = 0, first: 
   else
     val newval =
       if first then
-        debugMessage(s"Element 1: ${s(i).input}; Element 2 ${s(i+2).input}; Operator: ${s(i+1).input}")
+        debugMessage(s"Element 1: ${s(i).raw_name}; Element 2 ${s(i+2).raw_name}; Operator: ${s(i+1).raw_name}")
         calculate_class(s(i), s(i+2), s(i+1))
       else
-        debugMessage(s"Element 1: $finalval; Element 2 ${s(i+1).input}; Operator: ${s(i).input}")
+        debugMessage(s"Element 1: $finalval; Element 2 ${s(i+1).raw_name}; Operator: ${s(i).raw_name}")
         calculate_class(finalval, s(i+1), s(i))
     if first then
       calculateSeq(s, newval, i+3, false)

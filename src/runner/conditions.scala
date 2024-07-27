@@ -64,11 +64,11 @@ private def addElement(x: Vector[String], y: String): Vector[String] =
 
 private def compare_str_contains(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
   val str0 =
-    if e0.vartype == variable_type.none then e0.input
+    if e0.vartype == variable_type.none then e0.raw_name
     else e0.valueToString()
 
   val str1 =
-    if e1.vartype == variable_type.none then e1.input
+    if e1.vartype == variable_type.none then e1.raw_name
     else e1.valueToString()
 
   if equals then str0.contains(str1)
@@ -76,11 +76,11 @@ private def compare_str_contains(e0: TofuVar, e1: TofuVar, equals: Boolean): Boo
 
 private def compare_str(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
   val str0 =
-    if e0.vartype == variable_type.none then e0.input
+    if e0.vartype == variable_type.none then e0.raw_name
     else e0.valueToString()
 
   val str1 =
-    if e1.vartype == variable_type.none then e1.input
+    if e1.vartype == variable_type.none then e1.raw_name
     else e1.valueToString()
 
   if equals then str0 == str1
@@ -88,12 +88,12 @@ private def compare_str(e0: TofuVar, e1: TofuVar, equals: Boolean): Boolean =
 
 private def compare_int(e0: TofuVar, e1: TofuVar, operator: String): Boolean =
   val int0 =
-    if e0.vartype == variable_type.none then condition_mkint(e0.input)
+    if e0.vartype == variable_type.none then condition_mkint(e0.raw_name)
     else if e0.vartype == variable_type.integer then
       e0.value_int
     else e0.valueToString().length
   val int1 =
-    if e1.vartype == variable_type.none then condition_mkint(e1.input)
+    if e1.vartype == variable_type.none then condition_mkint(e1.raw_name)
     else if e1.vartype == variable_type.integer then
       e1.value_int
     else e1.valueToString().length
