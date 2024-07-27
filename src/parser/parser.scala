@@ -71,16 +71,6 @@ def parseString_raw(line: String, start: Int): String =
   val str = mkstr(line, i = start)
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
-  
-def findBlockEnd(s: Seq[String], startk: String, endk: String, i: Int, count: Int): Int =
-  if i >= s.length then
-    if count == 0 then i else -1 //-1 must not happen!!!!!
-  else if count == 0 then i
-  else if startsWith_strict(s(i), startk) then
-    findBlockEnd(s, startk, endk, i+1, count+1)
-  else if startsWith_strict(s(i), endk) then
-    findBlockEnd(s, startk, endk, i+1, count-1)
-  else findBlockEnd(s, startk, endk, i+1, count)
 
 def parseLocate(line: String): (Int, Int) =
   val start = findLineStart(line, 6)
