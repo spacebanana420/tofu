@@ -2,7 +2,7 @@ package tofu.runner
 
 import tofu.{debugMessage, debug_printSeq}
 import tofu.parser.*
-import tofu.reader.{findLineStart, readScript}
+import tofu.reader.readScript
 import tofu.variables.*
 import tofu.closeTofu
 

@@ -3,7 +3,6 @@ package tofu.runner
 import tofu.{debugMessage, debug_printSeq, closeTofu}
 import tofu.variables.*
 import tofu.parser.*
-import tofu.reader.findLineStart
 import tofu.math_parser.evaluateExpression
 
 import scala.sys.process.*

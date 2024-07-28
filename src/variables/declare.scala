@@ -2,7 +2,6 @@ package tofu.variables
 
 import tofu.{debugMessage, debug_printSeq}
 import tofu.parser.*
-import tofu.reader.findLineStart
 import tofu.runner.*
 
 import scala.sys.process.*

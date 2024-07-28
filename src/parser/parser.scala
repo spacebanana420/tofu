@@ -1,9 +1,13 @@
 package tofu.parser
 
-import tofu.reader.findLineStart
 import tofu.variables.TofuVar
 import tofu.{debugMessage, debug_printSeq}
 import tofu.closeTofu
+
+def findLineStart(line: String, i: Int = 0): Int =
+  if i >= line.length then -1
+  else if line(i) != ' ' && line(i) != '\t' then i
+  else findLineStart(line, i+1)
 
 def findInList(find: String, list: Seq[String], i: Int = 0): Int =
   if i >= list.length then -1
