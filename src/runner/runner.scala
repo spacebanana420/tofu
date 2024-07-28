@@ -9,8 +9,8 @@ import tofu.reader.readScript
 import tofu.closeTofu
 
 var var_name = Vector[String]()
-var var_type = Vector[variable_type]()
-var var_pointer = Vector[Int]()
+var var_type = Array[variable_type]()
+var var_pointer = Array[Int]()
 
 var string_val = Array[String]()
 var int_val = Array[Int]()
@@ -90,7 +90,7 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arradd" =>
           val (name, value) = parseArrayAddition(s(i))
-          val tvar = TofuVar(value)
+          val tvar = VarReader(value)
           if tvar.is_int then
             addToArray(name, tvar.value_int)
           else addToArray(name, tvar.value_str)
@@ -107,13 +107,13 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arreplace" =>
           val (name, value, index) = parseArrayAccess(s(i), 9)
-          val tvar = TofuVar(value)
+          val tvar = VarReader(value)
           if tvar.is_int then replaceInArray(name, index, tvar.value_int)
           else replaceInArray(name, index, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
         case "arrlen" =>
           val (name, variablename) = parseArrayAddition(s(i))
-          val v = TofuVar(name)
+          val v = VarReader(name)
           if v.vartype != variable_type.array then
             closeTofu(s"Array error! The array $name at line\n${s(i)}\nDoes not exist!")
           declareInt(variablename, array_val(v.pointer).size())

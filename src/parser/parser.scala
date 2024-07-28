@@ -1,6 +1,6 @@
 package tofu.parser
 
-import tofu.variables.TofuVar
+import tofu.variables.VarReader
 import tofu.{debugMessage, debug_printSeq}
 import tofu.closeTofu
 
@@ -67,7 +67,7 @@ def mkstr(line: String, s_seq: Vector[String] = Vector(), arg: String = "", i: I
     mkstr(line, s_seq, arg + line(i), i+1, ignore_spaces)
 
 def parseString(line: String, start: Int): String =
-  val str = mkstr(line, i = start).map(x => TofuVar(x).valueToString())
+  val str = mkstr(line, i = start).map(x => VarReader(x).valueToString())
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
 

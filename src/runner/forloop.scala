@@ -5,12 +5,12 @@ import tofu.closeTofu
 import tofu.debugMessage
 import tofu.debug_printSeq
 
-def processForLoop(line: String): (String, TofuVar) =
+def processForLoop(line: String): (String, VarReader) =
   val start = findLineStart(line, 3)
   val elements = mkstr(line, i = start)
   if elements.length != 3 || elements(1) != "in" then
     closeTofu(s"Syntax error! For loop at line \n$line\nIs improperly written!")
-  val list = TofuVar(elements(2))
+  val list = VarReader(elements(2))
   val index = elements(0)
   if list.vartype != variable_type.array then
     closeTofu(s"Syntax error! Array ${elements(2)} in for loop at line \n$line\nIs not a declared array!")

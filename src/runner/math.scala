@@ -27,18 +27,18 @@ def calc_operator(e0: Int, e1: Int, o: String): Int =
       e0 % e1
     case _ => 0
 
-private def calculate_class(e0: TofuVar, e1: TofuVar, o: TofuVar): Int =
+private def calculate_class(e0: VarReader, e1: VarReader, o: VarReader): Int =
   val operator = o.raw_name
   val num0 = if e0.vartype != variable_type.integer then math_mkInt(e0.raw_name) else e0.value_int
   val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.raw_name) else e1.value_int
   calc_operator(num0, num1, operator)
 
-private def calculate_class(e0: Int, e1: TofuVar, o: TofuVar): Int =
+private def calculate_class(e0: Int, e1: VarReader, o: VarReader): Int =
   val operator = o.raw_name
   val num1 = if e1.vartype != variable_type.integer then math_mkInt(e1.raw_name) else e1.value_int
   calc_operator(e0, num1, operator)
 
-private def calculateSeq(s: Seq[TofuVar], finalval: Int = 0, i: Int = 0, first: Boolean = true): Int =
+private def calculateSeq(s: Seq[VarReader], finalval: Int = 0, i: Int = 0, first: Boolean = true): Int =
   if i >= s.length then finalval
   else
     val newval =

@@ -79,7 +79,7 @@ def parseExpression(tokens: List[Token]): Int =
         debugMessage(s"Parsed number: $n")
         (n, tail)
       case VariableToken(name) :: tail => 
-        val value = TofuVar(name).value_int
+        val value = VarReader(name).value_int
         debugMessage(s"Parsed variable: $name with value $value")
         (value, tail)
       case ParenToken('(') :: tail =>

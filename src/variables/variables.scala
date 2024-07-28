@@ -10,22 +10,8 @@ import tofu.closeTofu
 
 enum variable_type:
   case string, integer, array, none
-  
-class TofuArray:
-  private var elements: Array[Any] = Array()
 
-  def add(value: Any) = elements = elements :+ value
-  def get(index: Int): Any =
-    if index >= elements.length then closeTofu(s"Array read error! Array of size ${elements.length} is too small for index $index!")
-    elements(index)
-  def replace(value: Any, i: Int) =
-    if i >= elements.length then closeTofu(s"Array read error! Array of size ${elements.length} is too small for index $i!")
-    elements(i) = value
-
-  def size(): Int = elements.size
-  def toArray(): Array[Any] = elements
-
-class TofuVar(input: String):
+class VarReader(input: String):
   val name = if input.length > 0 && input(0) == '$' then input.tail else input
   val raw_name = input
   val index = findInList(name, var_name)
@@ -54,7 +40,7 @@ class TofuVar(input: String):
 
   private def getPointer(): Int =
     if index == -1 then -1 else var_pointer(index)
-end TofuVar
+end VarReader
 
 def getVariableProperties(line: String, keyword: String): Vector[String] =
   val start = findLineStart(line, keyword.length)
