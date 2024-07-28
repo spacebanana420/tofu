@@ -63,7 +63,7 @@ def mkstr(line: String, s_seq: Vector[String] = Vector(), arg: String = "", i: I
     mkstr(line, s_seq, arg + line(i), i+1, ignore_spaces)
 
 def parseString(line: String, start: Int): String =
-  val str = mkstr(line, i = start).map(x => TofuVar(x).value_str)
+  val str = mkstr(line, i = start).map(x => TofuVar(x).valueToString())
   debug_printSeq(s"From the string:\n$line\nThe parsed sequence is:", str)
   mkstr_raw(str)
 
