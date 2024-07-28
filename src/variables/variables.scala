@@ -32,16 +32,16 @@ class TofuVar(input: String):
   val index = findInList(name, var_name)
   val vartype = getType()
   val pointer = getPointer()
+  val is_int = vartype == variable_type.integer || isInt(name)
 
   val value_str = if vartype == variable_type.string then string_val(pointer) else name
   val value_int =
     if vartype == variable_type.integer then int_val(pointer)
-    else if isInt(name) then mkInt(name)
+    else if is_int then mkInt(name)
     else 0
   val value_array = if vartype == variable_type.array then array_val(pointer) else new TofuArray()
   val value =
-    if vartype == variable_type.integer then value_int
-    else value_str
+    if vartype == variable_type.integer then value_int else value_str
 
   def valueToString(): String =
     vartype match

@@ -76,12 +76,10 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arradd" =>
           val (name, value) = parseArrayAddition(s(i))
-          val tvar = readVariable_class_safe(value)
-          if tvar.vartype == variable_type.integer then
+          val tvar = TofuVar(value)
+          if tvar.is_int then
             addToArray(name, tvar.value_int)
-          else
-            if isInt(value) then addToArray(name, mkInt(value))
-            else addToArray(name, tvar.value_str)
+          else addToArray(name, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
         case "arrget" =>
           val (name, variable, index) = parseArrayAccess(s(i), 7)
@@ -95,13 +93,9 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           loopScript(s, ifunc, nfunc, i+1)
         case "arreplace" =>
           val (name, value, index) = parseArrayAccess(s(i), 9)
-          val tvar = readVariable_class_safe(value)
-          if tvar.vartype == variable_type.integer then
-            replaceInArray(name, index, tvar.value_int)
-          else
-            if isInt(value) then replaceInArray(name, index, mkInt(value))
-            else
-              replaceInArray(name, index, tvar.value_str)
+          val tvar = TofuVar(value)
+          if tvar.is_int then replaceInArray(name, index, tvar.value_int)
+          else replaceInArray(name, index, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))

@@ -29,17 +29,16 @@ def checkCondition(line: String, isIF: Boolean): Boolean =
   elements.length match
     case 1 =>
       debugMessage("If statement has only 1 element, returning true if variable exists or is not a variable")
-      val variable = readVariable_class_safe(elements(0))
-      elements(0)(0) != '$' || variable.vartype != variable_type.none
+      TofuVar(elements(0)).vartype != variable_type.none
     case 2 =>
       if elements(1) == "exists" then
-        readVariable_class_safe(elements(0)).vartype != variable_type.none
+        elements(0)(0) != '$' || TofuVar(elements(0)).vartype != variable_type.none
       else if elements(1) == "!exists" then
-        readVariable_class_safe(elements(0)).vartype == variable_type.none
+        TofuVar(elements(0)).vartype == variable_type.none
       else false
     case _ =>
-      val e0 = readVariable_class_safe(elements(0))
-      val e1 = readVariable_class_safe(elements(2))
+      val e0 = TofuVar(elements(0))
+      val e1 = TofuVar(elements(2))
       debugMessage(s"Running if statement: [element 0] ${elements(0)} [element 1] ${elements(2)} [operator] ${elements(1)}")
       val condition = elements(1) match
         case "==" => compare_str(e0, e1, true)
