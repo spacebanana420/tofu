@@ -15,7 +15,8 @@ Tofu's specification contains a simple way to store information in memory to be 
 * **readstr** - Reads user input and declares the input as a string
 * **array** - Creates a new array
 * **arradd** - Adds a new element to an array
-* **arrget** - Gets an element from the array and declares it as a variable
+* **arrget** - Gets an element from an array and declares it as a variable
+* **arrlen** - Gets the length of an array and declares it as an integer variable
 
 Example:
 
@@ -144,3 +145,14 @@ arreplace info, 500, 0
 arrget info, variable1, 0
 print $variable1
 ```
+
+You can also obtain the length of an array with `arrlen`:
+
+```
+array emptyarray
+arrlen emptyarray, variable1
+
+print $variable1
+```
+
+This code obtains the length of the array `emptyarray` and declares it as an integer variable, then prints it. Since the array is created but no element is given to it, its length value is `0`.

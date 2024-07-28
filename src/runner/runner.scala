@@ -97,6 +97,13 @@ private def loopScript(s: Seq[String], ifunc: Seq[Int], nfunc: Seq[String], i: I
           if tvar.is_int then replaceInArray(name, index, tvar.value_int)
           else replaceInArray(name, index, tvar.value_str)
           loopScript(s, ifunc, nfunc, i+1)
+        case "arrlen" =>
+          val (name, variablename) = parseArrayAddition(s(i))
+          val v = TofuVar(name)
+          if v.vartype != variable_type.array then
+            closeTofu(s"Array error! The array $name at line\n${s(i)}\nDoes not exist!")
+          declareInt(variablename, array_val(v.pointer).size())
+          loopScript(s, ifunc, nfunc, i+1)
         case "exec" =>
           exec(s(i))
           loopScript(s, ifunc, nfunc, i+1)
@@ -149,7 +156,7 @@ private def lineType(line: String, types: Vector[String] =
 Vector(
 "string", "readstr", "while", "sleep", "calcint", "int",
 "print", "clear", "locate", "color", "if", "function", "exec", "call",
-"break", "stop", "array", "arradd", "arrget", "arreplace"),
+"break", "stop", "array", "arradd", "arrget", "arreplace", "arrlen"),
 i: Int = 0): String =
   if i >= types.length then "none"
   else if startsWith_strict(line, types(i)) then types(i)

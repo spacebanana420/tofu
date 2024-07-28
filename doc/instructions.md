@@ -12,6 +12,7 @@ Tofu's language style is somewhat inspired by CPU architecture instruction sets.
 * arrget
 * arradd
 * arreplace
+* arrlen
 * call
 * return
 * exec
@@ -101,7 +102,7 @@ readstr variable1
 print $variable1
 ```
 
-## array, arrget, arradd and arreplace
+## array, arrget, arradd, arreplace and arrlen
 
 You can declare arrays as a container to multiple elements of integer or string value:
 
@@ -124,6 +125,17 @@ arreplace info, 500, 0
 arrget info, variable1, 0
 print $variable1
 ```
+
+You can also obtain the length of an array with `arrlen`:
+
+```
+array emptyarray
+arrlen emptyarray, variable1
+
+print $variable1
+```
+
+This code obtains the length of the array `emptyarray` and declares it as an integer variable, then prints it. Since the array is created but no element is given to it, its length value is `0`.
 
 The value is determined by the user at runtime, but the name of the variable must be given.
 
